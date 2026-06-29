@@ -3,23 +3,27 @@
 > **Scope.** The complete, named inventory of every brand mark, icon, illustration,
 > avatar, background, pattern, animation, and document asset ClinicOS needs — for
 > the current foundation **and** every future module. One row = one file.
-> This is the **naming contract**: build artwork to these names so code can import
-> them before the art exists.
+> This is the **build-to naming contract**: produce artwork to these exact names so
+> code can register/import them before the art exists.
 >
-> **Anchors:** [src/assets/README.md](../../src/assets/README.md) · Asset Registry =
-> [PROJECT_BRAIN.md §32](../brain/PROJECT_BRAIN.md) · naming law =
-> [NamingConvention.md](../architecture/NamingConvention.md) (kebab-case, singular,
-> domain-named — e.g. `empty-queue.svg`, never `EmptyQueue.SVG`).
+> **Naming is governed, not invented here.** Every name below obeys
+> [NamingStandards.md](./NamingStandards.md) (kebab-case; `<category>-<concept>[-variant][-theme]`;
+> full domain words — never `rx`/`appt`/`org`; no redundant `icon-` prefix inside an
+> icon folder). Folder rules + the two tiers: [AssetArchitecture.md](./AssetArchitecture.md).
+> Served assets are consumed by **registry key** via `assetUrl(key)`
+> ([`src/shared/config/assets.ts`](../../src/shared/config/assets.ts)) — key is camelCase,
+> file is kebab-case. Shipped files are logged in
+> [PROJECT_BRAIN.md §32](../brain/PROJECT_BRAIN.md).
 
-## Conventions
+## How to read this
 
-- **Format:** `.svg` for all line/flat art & icons; `.json` for Lottie; `.png`/`.webp`
-  only for raster textures & PWA icons.
-- **Theming:** icons use `currentColor` (no baked fills); illustrations use semantic
-  token colors so dark / high-contrast themes recolor automatically.
-- **No baked text:** never embed localizable words in artwork — caption in the UI layer.
+- **Format:** `.svg` for all line/flat art & icons; `.json` (Lottie) for motion;
+  `.png`/`.webp` only for raster textures, favicons & social/splash.
+- **Theming:** icon sources use `currentColor`; illustrations use semantic token
+  colours so dark / high-contrast re-theme automatically.
+- **No baked text:** never embed localizable words in artwork — compose text in the UI.
 - **A11y:** decorative art is `aria-hidden`; meaningful art gets a localized `alt`.
-- **Optimize:** run `pnpm optimize:svg` before commit.
+- **Before commit:** `pnpm optimize:svg` + `pnpm check:assets`.
 
 **When legend** — `Now` = needed by the current foundation + UI kit + the imminent
 Auth / App-Shell phase · `Next` = first feature modules (appointments, queue,
@@ -33,425 +37,432 @@ follow-up, reports, telemedicine, documents).
 ```
 src/assets/
 ├── brand/
-│   ├── logos/          # primary lockups, symbol, wordmark, app icon, favicon
-│   ├── monochrome/     # single-colour (black / white / currentColor)
-│   ├── themed/         # light / dark / high-contrast tuned marks
-│   └── watermarks/     # faint marks for docs & empty backgrounds
+│   ├── logos/          # clinicos-logo / -mark / -wordmark / layout variants
+│   ├── monochrome/     # clinicos-mono single-ink lockups
+│   ├── themed/         # clinicos-logo-light / -dark surface variants
+│   └── watermarks/     # clinicos-watermark[-context]
 ├── icons/              # custom SVG sources NOT in lucide-react (lucide is default)
-│   ├── brand/          # third-party logos (OAuth, payments, integrations)
+│   ├── brand/          # clinicos-glyph + third-party marks (OAuth, payments)
 │   ├── medical/        # clinical glyphs lucide lacks
-│   ├── navigation/     # module / sidebar glyphs
-│   ├── action/         # domain verbs (prescribe, dispense, check-in…)
+│   ├── navigation/     # bespoke sidebar / chrome glyphs
+│   ├── action/         # domain verbs (dispense, check-in, advance-queue…)
 │   └── status/         # queue / vital / sync / payment status glyphs
-├── illustrations/
-│   ├── authentication/ # login, OTP, reset, session
-│   ├── empty-states/   # one per list/module "nothing here yet"
-│   ├── error-states/   # 404 / 403 / 500 / network / crash
-│   ├── loading/        # context loaders
-│   ├── maintenance/    # downtime / upgrade / coming-soon
-│   ├── medical/        # domain hero art (consultation, vitals, pharmacy…)
-│   ├── offline/        # disconnected / outbox-queued / synced
-│   ├── onboarding/     # welcome / setup wizard / tour
-│   └── success/        # confirmations & celebrations
+├── illustrations/      # type-foldered, DOMAIN-IN-FILENAME (no per-domain folders)
+│   ├── authentication/ # sign-in, account-locked…
+│   ├── empty-states/   # empty-<domain>
+│   ├── error-states/   # error-<context>
+│   ├── loading/        # loading-<context>
+│   ├── maintenance/    # maintenance, scheduled-downtime…
+│   ├── medical/        # <scene> hero art (consultation-scene…)
+│   ├── offline/        # offline, offline-syncing…
+│   ├── onboarding/     # welcome, tour-<topic>…
+│   └── success/        # payment-success, appointment-booked…
 ├── avatars/
-│   ├── placeholders/   # default person / role / clinic avatars
-│   └── patterns/       # generated-avatar background tiles (8-hue)
+│   ├── placeholders/   # avatar-<role>
+│   └── patterns/       # pattern-avatar-<n> generated-avatar backgrounds (8-hue)
 ├── images/
-│   ├── backgrounds/    # screen & print backdrops, gradients
-│   └── patterns/       # tileable decorative patterns
+│   ├── backgrounds/    # bg-<context>
+│   └── patterns/       # pattern-<name>
 ├── animations/
-│   └── lottie/         # JSON motion (reduced-motion gated at consumer)
+│   └── lottie/         # <concept>.json (reduced-motion gated at consumer)
 └── documents/
-    ├── pdf/            # prescription / invoice / report letterheads
-    └── print/          # token slips, stamps, cards
+    ├── pdf/            # <document>-<part>  (prescription-header, invoice-footer…)
+    └── print/          # token-slip, clinic-stamp, prescription-watermark…
 ```
+
+> Favicons / social-preview / splash are **Tier-2 platform assets** under `public/`
+> (not `src/assets/`) — see [§9](#9-favicons--social--splash-public).
 
 ---
 
 ## 1. `brand/`
 
+> Served family · registry keys `brand.*` in [`assets.ts`](../../src/shared/config/assets.ts).
+> Brand slug is always `clinicos-`; theme suffix (`-light`/`-dark`) is the **surface** polarity.
+
 ### 1.1 `brand/logos/`
 
-| File                  | Description                                | When   |
-| --------------------- | ------------------------------------------ | ------ |
-| `logo-full.svg`       | Primary lockup — symbol + wordmark         | Now    |
-| `logo-symbol.svg`     | Standalone "C" symbol mark                 | Now    |
-| `logo-wordmark.svg`   | Text-only "ClinicOS" wordmark              | Now    |
-| `logo-horizontal.svg` | Symbol left of wordmark                    | Now    |
-| `logo-stacked.svg`    | Symbol above wordmark (vertical)           | Now    |
-| `logo-app-icon.svg`   | Rounded-square launcher icon               | Now    |
-| `favicon.svg`         | Scalable browser favicon                   | Now    |
-| `logo-tagline.svg`    | Lockup + "Clinic Operating System" tagline | Future |
-| `logo-emblem.svg`     | Circular badge / seal variant              | Future |
+| File                           | Description                                            | When   |
+| ------------------------------ | ------------------------------------------------------ | ------ |
+| `clinicos-logo.svg`            | Full lockup — mark + wordmark (`brand.logo`)           | Now    |
+| `clinicos-mark.svg`            | Compact symbol/mark, favicon source (`brand.logoMark`) | Now    |
+| `clinicos-wordmark.svg`        | Text-only "ClinicOS" wordmark                          | Now    |
+| `clinicos-logo-horizontal.svg` | Mark left of wordmark                                  | Now    |
+| `clinicos-logo-stacked.svg`    | Mark above wordmark (vertical)                         | Now    |
+| `clinicos-app-icon.svg`        | Rounded-square launcher/app icon source                | Now    |
+| `clinicos-logo-tagline.svg`    | Lockup + "Clinic Operating System" tagline             | Future |
+| `clinicos-emblem.svg`          | Circular badge / seal variant                          | Future |
 
 ### 1.2 `brand/monochrome/`
 
-| File                         | Description                            | When |
-| ---------------------------- | -------------------------------------- | ---- |
-| `logo-mono-black.svg`        | Solid black single-colour lockup       | Now  |
-| `logo-mono-white.svg`        | Solid white (dark / photo backgrounds) | Now  |
-| `logo-symbol-mono-black.svg` | Black symbol only                      | Now  |
-| `logo-symbol-mono-white.svg` | White symbol only                      | Now  |
-| `logo-mono-currentcolor.svg` | Inherits `currentColor` for theming    | Now  |
+| File                         | Description                                                | When |
+| ---------------------------- | ---------------------------------------------------------- | ---- |
+| `clinicos-mono.svg`          | Single-ink lockup, print/watermark base (`brand.logoMono`) | Now  |
+| `clinicos-mark-mono.svg`     | Single-ink mark                                            | Now  |
+| `clinicos-wordmark-mono.svg` | Single-ink wordmark                                        | Next |
 
 ### 1.3 `brand/themed/`
 
-| File                     | Description                  | When |
-| ------------------------ | ---------------------------- | ---- |
-| `logo-light.svg`         | Lockup tuned for light theme | Now  |
-| `logo-dark.svg`          | Lockup tuned for dark theme  | Now  |
-| `logo-high-contrast.svg` | High-contrast theme lockup   | Now  |
-| `logo-symbol-light.svg`  | Symbol, light theme          | Next |
-| `logo-symbol-dark.svg`   | Symbol, dark theme           | Next |
+| File                              | Description                                       | When |
+| --------------------------------- | ------------------------------------------------- | ---- |
+| `clinicos-logo-light.svg`         | Lockup for **light** surfaces (`brand.logoLight`) | Now  |
+| `clinicos-logo-dark.svg`          | Lockup for **dark** surfaces (`brand.logoDark`)   | Now  |
+| `clinicos-mark-light.svg`         | Mark for light surfaces                           | Now  |
+| `clinicos-mark-dark.svg`          | Mark for dark surfaces                            | Now  |
+| `clinicos-logo-high-contrast.svg` | High-contrast-theme lockup                        | Next |
 
 ### 1.4 `brand/watermarks/`
 
-| File                         | Description                               | When   |
-| ---------------------------- | ----------------------------------------- | ------ |
-| `watermark-logo.svg`         | Faint full-logo watermark                 | Now    |
-| `watermark-symbol.svg`       | Symbol-only tileable watermark            | Future |
-| `watermark-rx.svg`           | Prescription paper watermark              | Future |
-| `watermark-invoice.svg`      | Invoice / billing watermark               | Future |
-| `watermark-confidential.svg` | Diagonal "Confidential" stamp for records | Future |
+| File                                  | Description                                  | When   |
+| ------------------------------------- | -------------------------------------------- | ------ |
+| `clinicos-watermark.svg`              | Faint logo watermark for docs/empty surfaces | Now    |
+| `clinicos-watermark-prescription.svg` | Prescription paper watermark                 | Future |
+| `clinicos-watermark-invoice.svg`      | Invoice / billing watermark                  | Future |
+| `clinicos-watermark-confidential.svg` | Diagonal "Confidential" stamp (records)      | Future |
 
 ---
 
 ## 2. `icons/` (custom SVG sources only — lucide-react is the default set)
 
-### 2.1 `icons/brand/` — third-party / integration marks
+> Pattern `<concept>[-variant].svg`, **no `icon-` prefix** (folder = group). Sources
+> use `currentColor`. The semantic icon **registry is code**
+> ([`src/shared/design-system/icons/registry.ts`](../../src/shared/design-system/icons/registry.ts)).
 
-| File                     | Description                      | When   |
-| ------------------------ | -------------------------------- | ------ |
-| `icon-clinicos.svg`      | App glyph for menus / tabs       | Now    |
-| `logo-google.svg`        | Google "G" — OAuth sign-in       | Now    |
-| `logo-abha.svg`          | ABHA / Ayushman Bharat Health ID | Future |
-| `logo-digilocker.svg`    | DigiLocker document import       | Future |
-| `logo-whatsapp.svg`      | WhatsApp patient comms           | Future |
-| `logo-microsoft.svg`     | Microsoft sign-in                | Future |
-| `logo-apple.svg`         | Apple sign-in                    | Future |
-| `logo-upi.svg`           | UPI payments mark                | Future |
-| `logo-razorpay.svg`      | Razorpay gateway                 | Future |
-| `logo-stripe.svg`        | Stripe gateway                   | Future |
-| `payment-visa.svg`       | Visa card network                | Future |
-| `payment-mastercard.svg` | Mastercard network               | Future |
-| `payment-rupay.svg`      | RuPay network                    | Future |
-| `payment-amex.svg`       | American Express network         | Future |
+### 2.1 `icons/brand/` — brand glyph + third-party marks
+
+| File                 | Description                       | When   |
+| -------------------- | --------------------------------- | ------ |
+| `clinicos-glyph.svg` | Monochrome app glyph (menus/tabs) | Now    |
+| `google.svg`         | Google "G" — OAuth sign-in        | Now    |
+| `abha.svg`           | ABHA / Ayushman Bharat Health ID  | Future |
+| `digilocker.svg`     | DigiLocker document import        | Future |
+| `whatsapp.svg`       | WhatsApp patient comms            | Future |
+| `microsoft.svg`      | Microsoft sign-in                 | Future |
+| `apple.svg`          | Apple sign-in                     | Future |
+| `upi.svg`            | UPI payments mark                 | Future |
+| `razorpay.svg`       | Razorpay gateway                  | Future |
+| `stripe.svg`         | Stripe gateway                    | Future |
+| `visa.svg`           | Visa card network                 | Future |
+| `mastercard.svg`     | Mastercard network                | Future |
+| `rupay.svg`          | RuPay network                     | Future |
+| `amex.svg`           | American Express network          | Future |
 
 ### 2.2 `icons/medical/` — clinical glyphs lucide lacks
 
-| File                       | Description                  | When   |
-| -------------------------- | ---------------------------- | ------ |
-| `med-stethoscope.svg`      | Stethoscope — consultation   | Now    |
-| `med-cross.svg`            | Medical cross brand accent   | Now    |
-| `med-rx.svg`               | ℞ prescription symbol        | Next   |
-| `med-heartbeat.svg`        | Pulse / heart rate           | Next   |
-| `med-blood-pressure.svg`   | BP cuff / sphygmomanometer   | Next   |
-| `med-thermometer.svg`      | Temperature                  | Next   |
-| `med-weight-scale.svg`     | Weight                       | Next   |
-| `med-height.svg`           | Height / stadiometer         | Next   |
-| `med-spo2.svg`             | Oxygen saturation / pulse-ox | Next   |
-| `med-respiratory-rate.svg` | Breathing rate               | Next   |
-| `med-bmi.svg`              | Body-mass index              | Next   |
-| `med-glucometer.svg`       | Blood glucose meter          | Future |
-| `med-pill.svg`             | Pill / tablet                | Next   |
-| `med-capsule.svg`          | Capsule                      | Future |
-| `med-syringe.svg`          | Injection / vaccine          | Future |
-| `med-vaccine.svg`          | Vaccination                  | Future |
-| `med-iv-drip.svg`          | IV drip                      | Future |
-| `med-blood-drop.svg`       | Blood sample                 | Future |
-| `med-test-tube.svg`        | Lab sample                   | Future |
-| `med-microscope.svg`       | Lab / pathology              | Future |
-| `med-ecg.svg`              | ECG / cardiac trace          | Future |
-| `med-xray.svg`             | X-ray / radiology            | Future |
-| `med-ultrasound.svg`       | Ultrasound / scan            | Future |
-| `med-tooth.svg`            | Dental                       | Future |
-| `med-eye.svg`              | Ophthalmology                | Future |
-| `med-ear.svg`              | ENT                          | Future |
-| `med-lungs.svg`            | Pulmonology                  | Future |
-| `med-brain.svg`            | Neurology                    | Future |
-| `med-bone.svg`             | Orthopaedics                 | Future |
-| `med-kidney.svg`           | Nephrology                   | Future |
-| `med-stomach.svg`          | Gastroenterology             | Future |
-| `med-skin.svg`             | Dermatology                  | Future |
-| `med-pregnancy.svg`        | Obstetrics / antenatal       | Future |
-| `med-baby.svg`             | Paediatrics                  | Future |
-| `med-dna.svg`              | Genetics / diagnostics       | Future |
-| `med-allergy.svg`          | Allergy flag                 | Future |
-| `med-mortar-pestle.svg`    | Pharmacy / compounding       | Future |
-| `med-ambulance.svg`        | Emergency transport          | Future |
-| `med-hospital-bed.svg`     | Admission / IPD              | Future |
-| `med-wheelchair.svg`       | Accessibility / mobility     | Future |
-| `med-first-aid.svg`        | First-aid kit                | Future |
-| `med-mask.svg`             | PPE mask                     | Future |
-| `med-gloves.svg`           | PPE gloves                   | Future |
+| File                    | Description                | When   |
+| ----------------------- | -------------------------- | ------ |
+| `stethoscope.svg`       | Stethoscope — consultation | Now    |
+| `cross.svg`             | Medical cross brand accent | Now    |
+| `prescription.svg`      | Prescription / ℞           | Next   |
+| `vitals.svg`            | Vitals summary             | Next   |
+| `heartbeat.svg`         | Heart rate / pulse         | Next   |
+| `blood-pressure.svg`    | BP cuff                    | Next   |
+| `thermometer.svg`       | Temperature                | Next   |
+| `weight-scale.svg`      | Weight                     | Next   |
+| `height-gauge.svg`      | Height                     | Next   |
+| `oxygen-saturation.svg` | SpO₂ / pulse-ox            | Next   |
+| `respiratory-rate.svg`  | Breathing rate             | Next   |
+| `bmi.svg`               | Body-mass index            | Next   |
+| `pill.svg`              | Pill / tablet              | Next   |
+| `capsule.svg`           | Capsule                    | Future |
+| `syringe.svg`           | Injection                  | Future |
+| `vaccine.svg`           | Vaccination                | Future |
+| `iv-drip.svg`           | IV drip                    | Future |
+| `blood-drop.svg`        | Blood sample               | Future |
+| `test-tube.svg`         | Lab sample                 | Future |
+| `microscope.svg`        | Lab / pathology            | Future |
+| `ecg.svg`               | ECG / cardiac trace        | Future |
+| `x-ray.svg`             | X-ray / radiology          | Future |
+| `ultrasound.svg`        | Ultrasound / scan          | Future |
+| `glucometer.svg`        | Blood-glucose meter        | Future |
+| `tooth.svg`             | Dental                     | Future |
+| `eye.svg`               | Ophthalmology              | Future |
+| `ear.svg`               | ENT                        | Future |
+| `lungs.svg`             | Pulmonology                | Future |
+| `brain.svg`             | Neurology                  | Future |
+| `bone.svg`              | Orthopaedics               | Future |
+| `kidney.svg`            | Nephrology                 | Future |
+| `stomach.svg`           | Gastroenterology           | Future |
+| `skin.svg`              | Dermatology                | Future |
+| `pregnancy.svg`         | Obstetrics / antenatal     | Future |
+| `baby.svg`              | Paediatrics                | Future |
+| `dna.svg`               | Genetics / diagnostics     | Future |
+| `allergy.svg`           | Allergy flag               | Future |
+| `mortar-pestle.svg`     | Pharmacy / compounding     | Future |
+| `ambulance.svg`         | Emergency transport        | Future |
+| `hospital-bed.svg`      | Admission / IPD            | Future |
+| `wheelchair.svg`        | Mobility / accessibility   | Future |
+| `first-aid.svg`         | First-aid kit              | Future |
+| `mask.svg`              | PPE mask                   | Future |
+| `gloves.svg`            | PPE gloves                 | Future |
 
-### 2.3 `icons/navigation/` — module / sidebar glyphs
+### 2.3 `icons/navigation/` — bespoke sidebar / chrome glyphs
 
-| File                    | Description         | When   |
-| ----------------------- | ------------------- | ------ |
-| `nav-dashboard.svg`     | Dashboard / home    | Now    |
-| `nav-patients.svg`      | Patients module     | Now    |
-| `nav-appointments.svg`  | Appointments module | Now    |
-| `nav-queue.svg`         | Live queue          | Now    |
-| `nav-consultation.svg`  | Consultation / OPD  | Next   |
-| `nav-prescriptions.svg` | Prescriptions       | Next   |
-| `nav-pharmacy.svg`      | Pharmacy            | Future |
-| `nav-billing.svg`       | Billing / invoices  | Future |
-| `nav-follow-up.svg`     | Follow-ups          | Future |
-| `nav-records.svg`       | Medical records     | Future |
-| `nav-reports.svg`       | Reports / analytics | Future |
-| `nav-settings.svg`      | Settings            | Now    |
-| `nav-help.svg`          | Help / support      | Now    |
+> Module nav icons come from lucide via the registry; only ClinicOS-specific chrome lives here.
+
+| File                       | Description               | When |
+| -------------------------- | ------------------------- | ---- |
+| `sidebar-collapse.svg`     | Collapse sidebar          | Now  |
+| `sidebar-expand.svg`       | Expand sidebar            | Now  |
+| `breadcrumb-separator.svg` | Breadcrumb chevron        | Now  |
+| `module-switcher.svg`      | Switch module / workspace | Next |
+| `command-palette.svg`      | Command-palette trigger   | Next |
+| `quick-actions.svg`        | Quick-actions launcher    | Next |
 
 ### 2.4 `icons/action/` — domain verbs
 
-| File                         | Description           | When   |
-| ---------------------------- | --------------------- | ------ |
-| `action-check-in.svg`        | Check patient in      | Next   |
-| `action-call-next.svg`       | Call next in queue    | Next   |
-| `action-record-vitals.svg`   | Record vitals         | Next   |
-| `action-prescribe.svg`       | Write prescription    | Next   |
-| `action-dispense.svg`        | Dispense medicine     | Future |
-| `action-collect-payment.svg` | Collect payment       | Future |
-| `action-book-slot.svg`       | Book appointment slot | Next   |
-| `action-reschedule.svg`      | Reschedule visit      | Future |
-| `action-cancel-visit.svg`    | Cancel visit          | Future |
-| `action-refer.svg`           | Refer to specialist   | Future |
-| `action-admit.svg`           | Admit patient         | Future |
-| `action-discharge.svg`       | Discharge patient     | Future |
-| `action-print-rx.svg`        | Print prescription    | Future |
+| File                     | Description               | When   |
+| ------------------------ | ------------------------- | ------ |
+| `check-in.svg`           | Check patient in          | Next   |
+| `advance-queue.svg`      | Call next / advance queue | Next   |
+| `record-vitals.svg`      | Record vitals             | Next   |
+| `prescribe.svg`          | Write prescription        | Next   |
+| `book-slot.svg`          | Book appointment slot     | Next   |
+| `dispense.svg`           | Dispense medicine         | Future |
+| `collect-payment.svg`    | Collect payment           | Future |
+| `reschedule.svg`         | Reschedule visit          | Future |
+| `cancel-visit.svg`       | Cancel visit              | Future |
+| `refer.svg`              | Refer to specialist       | Future |
+| `admit.svg`              | Admit patient             | Future |
+| `discharge.svg`          | Discharge patient         | Future |
+| `print-prescription.svg` | Print prescription        | Future |
 
 ### 2.5 `icons/status/` — queue / vital / sync / payment status
 
-| File                         | Description            | When   |
-| ---------------------------- | ---------------------- | ------ |
-| `status-scheduled.svg`       | Appointment scheduled  | Now    |
-| `status-checked-in.svg`      | Checked in / arrived   | Next   |
-| `status-waiting.svg`         | Waiting in queue       | Now    |
-| `status-in-consultation.svg` | In consultation        | Next   |
-| `status-completed.svg`       | Visit completed        | Now    |
-| `status-no-show.svg`         | Patient no-show        | Next   |
-| `status-cancelled.svg`       | Cancelled              | Now    |
-| `status-emergency.svg`       | Emergency / triage red | Next   |
-| `status-critical.svg`        | Vital critical         | Next   |
-| `status-stable.svg`          | Vital stable           | Next   |
-| `status-online.svg`          | Connected              | Now    |
-| `status-offline.svg`         | Disconnected           | Now    |
-| `status-syncing.svg`         | Outbox syncing         | Now    |
-| `status-sync-error.svg`      | Sync conflict / failed | Next   |
-| `status-paid.svg`            | Invoice paid           | Future |
-| `status-partial.svg`         | Partially paid         | Future |
-| `status-unpaid.svg`          | Unpaid / due           | Future |
+| File                  | Description            | When   |
+| --------------------- | ---------------------- | ------ |
+| `scheduled.svg`       | Appointment scheduled  | Now    |
+| `waiting.svg`         | Waiting in queue       | Now    |
+| `completed.svg`       | Visit completed        | Now    |
+| `cancelled.svg`       | Cancelled              | Now    |
+| `online.svg`          | Connected              | Now    |
+| `offline.svg`         | Disconnected           | Now    |
+| `syncing.svg`         | Outbox syncing         | Now    |
+| `success.svg`         | Generic success tick   | Now    |
+| `checked-in.svg`      | Checked in / arrived   | Next   |
+| `in-consultation.svg` | In consultation        | Next   |
+| `no-show.svg`         | Patient no-show        | Next   |
+| `emergency.svg`       | Emergency / triage     | Next   |
+| `critical.svg`        | Vital critical         | Next   |
+| `stable.svg`          | Vital stable           | Next   |
+| `sync-error.svg`      | Sync conflict / failed | Next   |
+| `paid.svg`            | Invoice paid           | Future |
+| `partial.svg`         | Partially paid         | Future |
+| `unpaid.svg`          | Unpaid / due           | Future |
 
 ---
 
 ## 3. `illustrations/`
 
-### 3.1 `illustrations/authentication/`
+> Type-foldered, **domain in the filename** — no per-domain folders.
+> Served family · registry keys `illustration.*`.
 
-| File                       | Description                | When   |
-| -------------------------- | -------------------------- | ------ |
-| `auth-login.svg`           | Friendly login hero        | Now    |
-| `auth-welcome.svg`         | Welcome side panel         | Now    |
-| `auth-otp.svg`             | OTP / verification entry   | Next   |
-| `auth-forgot-password.svg` | Reset-password prompt      | Next   |
-| `auth-reset-success.svg`   | Password changed           | Next   |
-| `auth-2fa.svg`             | Two-factor security shield | Future |
-| `auth-locked.svg`          | Account locked             | Future |
-| `auth-session-expired.svg` | Session timed out          | Next   |
-| `auth-logout.svg`          | Signed out / see you soon  | Next   |
-| `auth-invite.svg`          | Staff invitation accept    | Future |
+### 3.1 `illustrations/authentication/` — `<concept>.svg`
 
-### 3.2 `illustrations/empty-states/`
+| File                  | Description              | When   |
+| --------------------- | ------------------------ | ------ |
+| `sign-in.svg`         | Friendly login hero      | Now    |
+| `welcome.svg`         | Welcome side panel       | Now    |
+| `verify-otp.svg`      | OTP / verification entry | Next   |
+| `forgot-password.svg` | Reset-password prompt    | Next   |
+| `reset-success.svg`   | Password changed         | Next   |
+| `session-expired.svg` | Session timed out        | Next   |
+| `signed-out.svg`      | Signed out               | Next   |
+| `account-locked.svg`  | Account locked           | Future |
+| `two-factor.svg`      | Two-factor security      | Future |
+| `accept-invite.svg`   | Staff invitation accept  | Future |
+
+### 3.2 `illustrations/empty-states/` — `empty-<domain>.svg`
+
+| File                      | Description                     | When   |
+| ------------------------- | ------------------------------- | ------ |
+| `empty-generic.svg`       | Generic "nothing here" fallback | Now    |
+| `empty-search.svg`        | No search results               | Now    |
+| `empty-notifications.svg` | No notifications                | Now    |
+| `empty-queue.svg`         | Queue is clear                  | Now    |
+| `empty-patients.svg`      | No patients yet                 | Now    |
+| `empty-appointments.svg`  | No appointments                 | Now    |
+| `empty-messages.svg`      | No messages                     | Next   |
+| `empty-tasks.svg`         | No tasks                        | Next   |
+| `empty-vitals.svg`        | No vitals recorded              | Next   |
+| `empty-prescriptions.svg` | No prescriptions                | Next   |
+| `empty-consultation.svg`  | No consultation notes           | Next   |
+| `empty-allergies.svg`     | No known allergies              | Future |
+| `empty-lab-results.svg`   | No lab results                  | Future |
+| `empty-pharmacy.svg`      | Pharmacy stock empty            | Future |
+| `empty-cart.svg`          | Pharmacy cart empty             | Future |
+| `empty-invoices.svg`      | No invoices                     | Future |
+| `empty-records.svg`       | No medical records              | Future |
+| `empty-follow-ups.svg`    | No follow-ups                   | Future |
+| `empty-reports.svg`       | No reports                      | Future |
+| `empty-documents.svg`     | No documents                    | Future |
+
+### 3.3 `illustrations/error-states/` — `error-<context>.svg`
+
+| File                    | Description                     | When   |
+| ----------------------- | ------------------------------- | ------ |
+| `error-generic.svg`     | Something went wrong            | Now    |
+| `error-not-found.svg`   | 404 — page not found            | Now    |
+| `error-permission.svg`  | 403 — access denied             | Now    |
+| `error-server.svg`      | 500 — server error              | Now    |
+| `error-network.svg`     | Connection failed               | Now    |
+| `error-crash.svg`       | Crash / error-boundary fallback | Now    |
+| `error-timeout.svg`     | Request timed out               | Next   |
+| `error-unsupported.svg` | Browser / device unsupported    | Future |
+| `error-upload.svg`      | Upload failed                   | Future |
+| `error-payment.svg`     | Payment failed                  | Future |
+
+### 3.4 `illustrations/loading/` — `loading-<context>.svg`
+
+| File                  | Description            | When   |
+| --------------------- | ---------------------- | ------ |
+| `loading-generic.svg` | Generic loading art    | Now    |
+| `loading-records.svg` | Loading records / data | Next   |
+| `loading-search.svg`  | Searching              | Next   |
+| `loading-sync.svg`    | Sync in progress       | Next   |
+| `loading-payment.svg` | Processing payment     | Future |
+| `loading-report.svg`  | Generating report      | Future |
+
+### 3.5 `illustrations/maintenance/` — `<concept>.svg`
+
+| File                     | Description         | When   |
+| ------------------------ | ------------------- | ------ |
+| `maintenance.svg`        | Under maintenance   | Next   |
+| `scheduled-downtime.svg` | Planned downtime    | Future |
+| `system-upgrade.svg`     | System upgrade      | Future |
+| `coming-soon.svg`        | Feature coming soon | Next   |
+
+### 3.6 `illustrations/medical/` — `<scene>.svg` (domain hero art)
+
+| File                      | Description                 | When   |
+| ------------------------- | --------------------------- | ------ |
+| `consultation-scene.svg`  | Doctor–patient consultation | Next   |
+| `prescription-scene.svg`  | Prescription issued         | Next   |
+| `vitals-check.svg`        | Vitals captured             | Next   |
+| `appointment-scene.svg`   | Appointment booked          | Next   |
+| `checkup-scene.svg`       | General check-up            | Future |
+| `lab-report-scene.svg`    | Lab report ready            | Future |
+| `pharmacy-counter.svg`    | Pharmacy / dispensing       | Future |
+| `vaccination-scene.svg`   | Vaccination                 | Future |
+| `telemedicine-scene.svg`  | Video consultation          | Future |
+| `health-record-scene.svg` | Health record / file        | Future |
+| `reception-scene.svg`     | Front-desk / reception      | Future |
+| `clinic-building.svg`     | Clinic premises             | Future |
+| `doctor-portrait.svg`     | Doctor portrait scene       | Future |
+| `patient-care.svg`        | Caring for patient          | Future |
+| `wellness-scene.svg`      | Wellness / healthy living   | Future |
+
+### 3.7 `illustrations/offline/` — `offline[-state].svg`
+
+| File                   | Description                | When   |
+| ---------------------- | -------------------------- | ------ |
+| `offline.svg`          | You're offline             | Now    |
+| `offline-queued.svg`   | Changes saved to Outbox    | Now    |
+| `offline-syncing.svg`  | Reconnecting / syncing     | Next   |
+| `offline-synced.svg`   | Back online, synced        | Next   |
+| `offline-conflict.svg` | Sync conflict needs review | Future |
+
+### 3.8 `illustrations/onboarding/` — `<step>.svg`
+
+| File                     | Description                | When   |
+| ------------------------ | -------------------------- | ------ |
+| `welcome.svg`            | Welcome to ClinicOS        | Next   |
+| `setup-clinic.svg`       | Set up your clinic         | Future |
+| `add-staff.svg`          | Invite your team           | Future |
+| `branding.svg`           | Customise branding / theme | Future |
+| `first-patient.svg`      | Add first patient          | Future |
+| `all-set.svg`            | Setup complete             | Future |
+| `tour-queue.svg`         | Tour slide — live queue    | Future |
+| `tour-vitals.svg`        | Tour slide — vitals        | Future |
+| `tour-prescriptions.svg` | Tour slide — prescribing   | Future |
+
+### 3.9 `illustrations/success/` — `<concept>.svg`
 
 | File                       | Description           | When   |
 | -------------------------- | --------------------- | ------ |
-| `empty-search.svg`         | No search results     | Now    |
-| `empty-notifications.svg`  | No notifications      | Now    |
-| `empty-queue.svg`          | Queue is clear        | Now    |
-| `empty-patients.svg`       | No patients yet       | Now    |
-| `empty-appointments.svg`   | No appointments       | Now    |
-| `empty-inbox.svg`          | No messages           | Next   |
-| `empty-tasks.svg`          | No tasks              | Next   |
-| `empty-calendar.svg`       | No events today       | Next   |
-| `empty-vitals.svg`         | No vitals recorded    | Next   |
-| `empty-prescriptions.svg`  | No prescriptions      | Next   |
-| `empty-allergies.svg`      | No known allergies    | Future |
-| `empty-lab-results.svg`    | No lab results        | Future |
-| `empty-pharmacy-stock.svg` | Stock empty           | Future |
-| `empty-cart.svg`           | Pharmacy cart empty   | Future |
-| `empty-invoices.svg`       | No invoices           | Future |
-| `empty-records.svg`        | No medical records    | Future |
-| `empty-follow-ups.svg`     | No follow-ups         | Future |
-| `empty-reports.svg`        | No reports            | Future |
-| `empty-documents.svg`      | No documents          | Future |
-| `empty-favorites.svg`      | No favourites / saved | Future |
-
-### 3.3 `illustrations/error-states/`
-
-| File                       | Description                     | When   |
-| -------------------------- | ------------------------------- | ------ |
-| `error-404.svg`            | Page not found                  | Now    |
-| `error-403.svg`            | Access denied / no permission   | Now    |
-| `error-500.svg`            | Server error                    | Now    |
-| `error-generic.svg`        | Something went wrong            | Now    |
-| `error-network.svg`        | Connection failed               | Now    |
-| `error-boundary.svg`       | Crash / error-boundary fallback | Now    |
-| `error-timeout.svg`        | Request timed out               | Next   |
-| `error-not-supported.svg`  | Browser / device unsupported    | Future |
-| `error-upload-failed.svg`  | Upload failed                   | Future |
-| `error-payment-failed.svg` | Payment failed                  | Future |
-
-### 3.4 `illustrations/loading/`
-
-| File                             | Description         | When   |
-| -------------------------------- | ------------------- | ------ |
-| `loading-default.svg`            | Generic loading art | Now    |
-| `loading-data.svg`               | Fetching data       | Next   |
-| `loading-search.svg`             | Searching           | Next   |
-| `loading-syncing.svg`            | Sync in progress    | Next   |
-| `loading-processing-payment.svg` | Payment processing  | Future |
-| `loading-generating-report.svg`  | Generating report   | Future |
-
-### 3.5 `illustrations/maintenance/`
-
-| File                        | Description         | When   |
-| --------------------------- | ------------------- | ------ |
-| `maintenance-progress.svg`  | Under maintenance   | Next   |
-| `maintenance-scheduled.svg` | Planned downtime    | Future |
-| `maintenance-upgrade.svg`   | System upgrade      | Future |
-| `coming-soon.svg`           | Feature coming soon | Next   |
-
-### 3.6 `illustrations/medical/` — domain hero art
-
-| File                             | Description                 | When   |
-| -------------------------------- | --------------------------- | ------ |
-| `medical-consultation.svg`       | Doctor–patient consultation | Next   |
-| `medical-prescription.svg`       | Prescription issued         | Next   |
-| `medical-vitals-recorded.svg`    | Vitals captured             | Next   |
-| `medical-appointment-booked.svg` | Appointment booked          | Next   |
-| `medical-checkup.svg`            | General check-up            | Future |
-| `medical-lab-report.svg`         | Lab report ready            | Future |
-| `medical-pharmacy.svg`           | Pharmacy / dispensing       | Future |
-| `medical-vaccination.svg`        | Vaccination                 | Future |
-| `medical-telemedicine.svg`       | Video consultation          | Future |
-| `medical-health-record.svg`      | Health record / file        | Future |
-| `medical-reception.svg`          | Front-desk / reception      | Future |
-| `medical-clinic-building.svg`    | Clinic premises             | Future |
-| `medical-doctor.svg`             | Doctor portrait scene       | Future |
-| `medical-patient-care.svg`       | Caring for patient          | Future |
-| `medical-wellness.svg`           | Wellness / healthy living   | Future |
-
-### 3.7 `illustrations/offline/`
-
-| File                        | Description                | When   |
-| --------------------------- | -------------------------- | ------ |
-| `offline-disconnected.svg`  | You're offline             | Now    |
-| `offline-queued.svg`        | Changes saved to Outbox    | Now    |
-| `offline-reconnecting.svg`  | Reconnecting…              | Next   |
-| `offline-synced.svg`        | Back online, synced        | Next   |
-| `offline-sync-conflict.svg` | Sync conflict needs review | Future |
-
-### 3.8 `illustrations/onboarding/`
-
-| File                           | Description                | When   |
-| ------------------------------ | -------------------------- | ------ |
-| `onboarding-welcome.svg`       | Welcome to ClinicOS        | Next   |
-| `onboarding-setup-clinic.svg`  | Set up your clinic         | Future |
-| `onboarding-add-staff.svg`     | Invite your team           | Future |
-| `onboarding-branding.svg`      | Customise branding / theme | Future |
-| `onboarding-first-patient.svg` | Add first patient          | Future |
-| `onboarding-complete.svg`      | All set — celebrate        | Future |
-| `onboarding-tour-1.svg`        | Feature tour slide 1       | Future |
-| `onboarding-tour-2.svg`        | Feature tour slide 2       | Future |
-| `onboarding-tour-3.svg`        | Feature tour slide 3       | Future |
-
-### 3.9 `illustrations/success/`
-
-| File                             | Description           | When   |
-| -------------------------------- | --------------------- | ------ |
-| `success-generic.svg`            | Done!                 | Now    |
-| `success-saved.svg`              | Saved successfully    | Now    |
-| `success-submitted.svg`          | Submitted             | Now    |
-| `success-appointment-booked.svg` | Appointment confirmed | Next   |
-| `success-checked-in.svg`         | Patient checked in    | Next   |
-| `success-prescription-sent.svg`  | Prescription issued   | Future |
-| `success-payment.svg`            | Payment received      | Future |
-| `success-vaccine-done.svg`       | Vaccination recorded  | Future |
-| `success-discharge.svg`          | Patient discharged    | Future |
+| `success-generic.svg`      | Done!                 | Now    |
+| `saved.svg`                | Saved successfully    | Now    |
+| `submitted.svg`            | Submitted             | Now    |
+| `appointment-booked.svg`   | Appointment confirmed | Next   |
+| `checked-in.svg`           | Patient checked in    | Next   |
+| `prescription-sent.svg`    | Prescription issued   | Future |
+| `payment-success.svg`      | Payment received      | Future |
+| `vaccination-recorded.svg` | Vaccination recorded  | Future |
+| `discharged.svg`           | Patient discharged    | Future |
 
 ---
 
 ## 4. `avatars/`
 
-### 4.1 `avatars/placeholders/`
+> Served family · registry keys `avatar.*`. Pattern `avatar-<role>.svg`; full role words.
 
-| File                        | Description                   | When   |
-| --------------------------- | ----------------------------- | ------ |
-| `avatar-patient.svg`        | Default patient avatar        | Now    |
-| `avatar-unknown.svg`        | Anonymous / unknown user      | Now    |
-| `avatar-staff.svg`          | Generic staff member          | Now    |
-| `avatar-clinic.svg`         | Clinic / org logo placeholder | Now    |
-| `avatar-doctor.svg`         | Default doctor                | Now    |
-| `avatar-patient-male.svg`   | Patient (male default)        | Next   |
-| `avatar-patient-female.svg` | Patient (female default)      | Next   |
-| `avatar-patient-other.svg`  | Patient (non-binary default)  | Next   |
-| `avatar-child.svg`          | Paediatric default            | Future |
-| `avatar-nurse.svg`          | Default nurse                 | Future |
-| `avatar-receptionist.svg`   | Default receptionist          | Future |
-| `avatar-pharmacist.svg`     | Default pharmacist            | Future |
+### 4.1 `avatars/placeholders/` — `avatar-<role>.svg`
 
-### 4.2 `avatars/patterns/` — initials-avatar backgrounds (8-hue chart palette)
+| File                        | Description                                       | When   |
+| --------------------------- | ------------------------------------------------- | ------ |
+| `avatar-patient.svg`        | Default patient avatar (`avatar.patient`)         | Now    |
+| `avatar-doctor.svg`         | Default doctor avatar (`avatar.doctor`)           | Now    |
+| `avatar-organization.svg`   | Default clinic/org avatar (`avatar.organization`) | Now    |
+| `avatar-staff.svg`          | Generic staff member                              | Now    |
+| `avatar-unknown.svg`        | Anonymous / unknown user                          | Now    |
+| `avatar-patient-male.svg`   | Patient (male default)                            | Next   |
+| `avatar-patient-female.svg` | Patient (female default)                          | Next   |
+| `avatar-patient-other.svg`  | Patient (non-binary default)                      | Next   |
+| `avatar-child.svg`          | Paediatric default                                | Future |
+| `avatar-nurse.svg`          | Default nurse                                     | Future |
+| `avatar-receptionist.svg`   | Default receptionist                              | Future |
+| `avatar-pharmacist.svg`     | Default pharmacist                                | Future |
+
+### 4.2 `avatars/patterns/` — `pattern-avatar-<name>.svg` (initials-avatar backgrounds)
 
 | File                                              | Description                           | When                       |
 | ------------------------------------------------- | ------------------------------------- | -------------------------- |
-| `avatar-pattern-01.svg` … `avatar-pattern-08.svg` | 8 background tiles, one per chart hue | Now (01–04) / Next (05–08) |
-| `avatar-gradient-coral.svg`                       | Brand coral gradient fill             | Next                       |
-| `avatar-gradient-sage.svg`                        | Brand sage gradient fill              | Next                       |
-| `avatar-gradient-clay.svg`                        | Brand clay gradient fill              | Future                     |
-| `avatar-gradient-sand.svg`                        | Brand sand gradient fill              | Future                     |
+| `pattern-avatar-01.svg` … `pattern-avatar-08.svg` | 8 background tiles, one per chart hue | Now (01–04) / Next (05–08) |
+| `pattern-avatar-coral.svg`                        | Brand coral gradient fill             | Next                       |
+| `pattern-avatar-sage.svg`                         | Brand sage gradient fill              | Next                       |
+| `pattern-avatar-clay.svg`                         | Brand clay gradient fill              | Future                     |
+| `pattern-avatar-sand.svg`                         | Brand sand gradient fill              | Future                     |
 
 ---
 
 ## 5. `images/`
 
-### 5.1 `images/backgrounds/`
+### 5.1 `images/backgrounds/` — `bg-<context>.<ext>`
 
 | File                    | Description                  | When   |
 | ----------------------- | ---------------------------- | ------ |
-| `bg-gradient-brand.svg` | Brand gradient mesh          | Now    |
-| `bg-gradient-light.svg` | Light-theme gradient         | Now    |
-| `bg-gradient-dark.svg`  | Dark-theme gradient          | Now    |
+| `bg-login.svg`          | Auth-screen backdrop         | Now    |
 | `bg-error.svg`          | Error-page backdrop          | Now    |
-| `bg-auth.svg`           | Auth-screen backdrop         | Now    |
-| `bg-auth-pattern.svg`   | Subtle auth pattern          | Next   |
-| `bg-dashboard-hero.svg` | Dashboard header backdrop    | Next   |
+| `bg-gradient-light.svg` | Light-theme gradient mesh    | Now    |
+| `bg-gradient-dark.svg`  | Dark-theme gradient mesh     | Now    |
+| `bg-dashboard.svg`      | Dashboard header backdrop    | Next   |
+| `bg-onboarding.svg`     | Onboarding backdrop          | Next   |
 | `bg-app-shell.svg`      | App-shell subtle background  | Future |
 | `bg-print-header.svg`   | Print / PDF header band      | Future |
 | `bg-noise.png`          | Subtle noise texture overlay | Future |
 
-### 5.2 `images/patterns/`
+### 5.2 `images/patterns/` — `pattern-<name>.<ext>`
 
-| File                        | Description               | When   |
-| --------------------------- | ------------------------- | ------ |
-| `pattern-dots.svg`          | Dot-grid tile             | Now    |
-| `pattern-grid.svg`          | Line-grid tile            | Now    |
-| `pattern-plus.svg`          | Plus / health motif       | Next   |
-| `pattern-cross-medical.svg` | Subtle medical-cross tile | Future |
-| `pattern-waves.svg`         | Calm waves                | Future |
-| `pattern-hexagon.svg`       | Hex mesh                  | Future |
-| `pattern-topography.svg`    | Topographic lines         | Future |
+| File                     | Description               | When   |
+| ------------------------ | ------------------------- | ------ |
+| `pattern-dots.svg`       | Dot-grid tile             | Now    |
+| `pattern-grid.svg`       | Line-grid tile            | Now    |
+| `pattern-plus.svg`       | Plus / health motif       | Next   |
+| `pattern-cross.svg`      | Subtle medical-cross tile | Future |
+| `pattern-waves.svg`      | Calm waves                | Future |
+| `pattern-hexagon.svg`    | Hex mesh                  | Future |
+| `pattern-topography.svg` | Topographic lines         | Future |
 
 ---
 
-## 6. `animations/lottie/`
+## 6. `animations/lottie/` — `<concept>.json`
 
 | File                   | Description                   | When   |
 | ---------------------- | ----------------------------- | ------ |
 | `loading-spinner.json` | Brand loading spinner         | Now    |
 | `loading-dots.json`    | Inline dots loader            | Now    |
 | `success-check.json`   | Success checkmark             | Now    |
-| `syncing.json`         | Outbox sync spinner           | Next   |
+| `sync-success.json`    | Outbox sync complete          | Next   |
 | `error-cross.json`     | Error animation               | Next   |
 | `empty-box.json`       | Empty-state float             | Next   |
 | `offline-cloud.json`   | Offline / cloud state         | Next   |
@@ -459,61 +470,67 @@ src/assets/
 | `heartbeat.json`       | Pulse / vitals motion         | Future |
 | `payment-success.json` | Payment success               | Future |
 | `confetti.json`        | Celebration (onboarding done) | Future |
-| `pulse-loader.json`    | Skeleton pulse                | Future |
 
 ---
 
 ## 7. `documents/`
 
+> `<document>-<part>.svg`; print-safe / monochrome; never bake localizable text.
+
 ### 7.1 `documents/pdf/` — letterheads & report frames
 
-| File                           | Description                          | When   |
-| ------------------------------ | ------------------------------------ | ------ |
-| `rx-header.svg`                | Prescription letterhead              | Future |
-| `rx-footer.svg`                | Prescription footer / signature band | Future |
-| `rx-watermark.svg`             | Prescription watermark               | Future |
-| `invoice-header.svg`           | Invoice letterhead                   | Future |
-| `invoice-footer.svg`           | Invoice footer                       | Future |
-| `lab-report-header.svg`        | Lab-report header                    | Future |
-| `referral-header.svg`          | Referral-letter header               | Future |
-| `discharge-summary-header.svg` | Discharge-summary header             | Future |
-| `certificate-medical.svg`      | Medical / fitness certificate frame  | Future |
-| `signature-line.svg`           | Doctor signature block               | Future |
+| File                            | Description                          | When   |
+| ------------------------------- | ------------------------------------ | ------ |
+| `prescription-header.svg`       | Prescription letterhead              | Future |
+| `prescription-footer.svg`       | Prescription footer / signature band | Future |
+| `invoice-header.svg`            | Invoice letterhead                   | Future |
+| `invoice-footer.svg`            | Invoice footer                       | Future |
+| `lab-report-header.svg`         | Lab-report header                    | Future |
+| `referral-header.svg`           | Referral-letter header               | Future |
+| `discharge-summary-header.svg`  | Discharge-summary header             | Future |
+| `medical-certificate-frame.svg` | Medical / fitness certificate frame  | Future |
+| `signature-line.svg`            | Doctor signature block               | Future |
 
 ### 7.2 `documents/print/` — counter / hand-out artifacts
 
-| File                         | Description                  | When   |
-| ---------------------------- | ---------------------------- | ------ |
-| `print-logo.svg`             | High-res mono logo for print | Future |
-| `print-token-slip.svg`       | Queue token-slip layout      | Future |
-| `print-appointment-card.svg` | Appointment card             | Future |
-| `print-clinic-stamp.svg`     | Clinic stamp / seal frame    | Future |
-| `print-qr-placeholder.svg`   | QR-code slot art             | Future |
+| File                         | Description               | When   |
+| ---------------------------- | ------------------------- | ------ |
+| `prescription-watermark.svg` | Prescription watermark    | Future |
+| `invoice-watermark.svg`      | Invoice watermark         | Future |
+| `token-slip.svg`             | Queue token-slip layout   | Future |
+| `appointment-card.svg`       | Appointment card          | Future |
+| `clinic-stamp.svg`           | Clinic stamp / seal frame | Future |
+| `qr-placeholder.svg`         | QR-code slot art          | Future |
 
 ---
 
-## 8. Appendix — PWA & favicons (`public/`, runtime-served)
+## 8. Favicons / social / splash (`public/`)
 
-> Per [src/assets/README.md](../../src/assets/README.md), CDN-swappable / runtime
-> artwork lives under `public/assets/**`, addressed via `assetUrl()`. Browser /
-> install icons live at the public root.
+> Tier-2 platform assets referenced by the HTML doc / web manifest — they follow
+> **platform conventions**, live under `public/`, and are **not** in `src/assets/`
+> (see [NamingStandards.md §6](./NamingStandards.md#6-favicon--social--splash-naming)).
 
-| File                    | Description                    | When |
-| ----------------------- | ------------------------------ | ---- |
-| `favicon.ico`           | Legacy multi-size favicon      | Now  |
-| `favicon.svg`           | Modern scalable favicon        | Now  |
-| `apple-touch-icon.png`  | iOS home-screen icon (180×180) | Now  |
-| `pwa-192.png`           | PWA icon 192×192               | Now  |
-| `pwa-512.png`           | PWA icon 512×512               | Now  |
-| `pwa-maskable-512.png`  | Maskable PWA icon (safe-zone)  | Now  |
-| `og-image.png`          | Open-Graph / social share card | Next |
-| `safari-pinned-tab.svg` | Safari pinned-tab mono mask    | Next |
+| File                                        | Description                                       | When |
+| ------------------------------------------- | ------------------------------------------------- | ---- |
+| `public/favicons/favicon.ico`               | Classic multi-size favicon                        | Now  |
+| `public/favicons/favicon.svg`               | Modern scalable favicon                           | Now  |
+| `public/favicons/favicon-16x16.png`         | 16×16 PNG fallback                                | Now  |
+| `public/favicons/favicon-32x32.png`         | 32×32 PNG fallback                                | Now  |
+| `public/favicons/apple-touch-icon.png`      | iOS home-screen icon (180×180)                    | Now  |
+| `public/favicons/icon-192-maskable.png`     | PWA maskable icon 192                             | Now  |
+| `public/favicons/icon-512-maskable.png`     | PWA maskable icon 512                             | Now  |
+| `public/social-preview/og-default.png`      | Open-Graph share card (1200×630)                  | Next |
+| `public/social-preview/twitter-default.png` | Twitter/X share card                              | Next |
+| `public/splash/splash-1170x2532.png`        | iOS splash (device-targeted; add sizes as needed) | Next |
 
 ---
 
-### Counts
+## Counts & rollout
 
-~ **180 named assets** across 25 folders — **Now ≈ 55**, **Next ≈ 50**, **Future ≈ 75**.
-Every row is a build-to name; ship the `Now` set first, then fill `Next` / `Future`
-per module. Add each shipped file as a row in
-[PROJECT_BRAIN.md §32 Asset Registry](../brain/PROJECT_BRAIN.md) with its license.
+~ **190 named assets** across the 25 source folders + `public/` platform assets —
+roughly **Now ≈ 55 · Next ≈ 55 · Future ≈ 80**. Ship the `Now` set first
+(brand, core empty/error/loading/offline states, status icons, default avatars,
+favicons), then fill `Next`/`Future` as each module lands. **Every shipped file
+must be added as a row in [PROJECT_BRAIN.md §32 Asset Registry](../brain/PROJECT_BRAIN.md)**
+with its license, and — if served — registered in
+[`assets.ts`](../../src/shared/config/assets.ts) before use.

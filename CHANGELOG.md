@@ -8,6 +8,19 @@ exhaustive per-phase record lives in
 
 ## [Unreleased]
 
+### Added — Design System Architecture
+
+- **Component Registry (code)** — `src/shared/design-system/registry/component-registry.ts`:
+  the type-safe, machine-checkable source of truth (24 shipped + 14 planned components,
+  categorised) — exported from `@shared/design-system`.
+- **`pnpm ds:registry`** — `scripts/ds-registry.mjs` validates the registry against the
+  component folders + barrel (component validation + unused/unregistered detection) and
+  generates the catalog `docs/design-system/ComponentRegistry.md`.
+- **Design System Architecture docs** — `docs/design-system/`: DesignSystem, ArchitectureGuide,
+  ComponentStandards, ContributionGuide, StorybookGuide, TestingGuide, MigrationGuide, BestPractices.
+
+## [0.7.0] — 2026-06-30 — Asset Management System
+
 ### Added — Asset Management System
 
 - **Asset architecture (two tiers):** bundled **source** assets in `src/assets/**`

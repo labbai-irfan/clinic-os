@@ -20,15 +20,16 @@ This canon documents the asset _system_ (architecture, registries, pipelines, st
 
 ## The docs
 
-| Document                                                 | Covers                                                                                     |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [AssetArchitecture.md](./AssetArchitecture.md)           | Why asset architecture; the complete folder structure + every folder's 6-field contract    |
-| [IconGuidelines.md](./IconGuidelines.md)                 | Icon Registry, categories, the `<Icon>` wrapper, theme-aware + medical icons, custom packs |
-| [SVGStandards.md](./SVGStandards.md)                     | SVG-first strategy, optimization pipeline, sizing/color/stroke, a11y                       |
-| [IllustrationGuidelines.md](./IllustrationGuidelines.md) | Illustration system (empty/error/loading/…) + avatar system                                |
-| [BrandGuidelines.md](./BrandGuidelines.md)               | Logos, themed/mono variants, PDF/invoice/prescription branding, white-label                |
-| [OptimizationGuide.md](./OptimizationGuide.md)           | Compression, responsive images, lazy loading, formats, CDN, performance budgets            |
-| [NamingStandards.md](./NamingStandards.md)               | Asset file + registry-key naming standards                                                 |
+| Document                                                 | Covers                                                                                                                               |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| [AssetCatalog.md](./AssetCatalog.md)                     | **The named inventory** — every image/SVG/Lottie/document, one-line description + `Now/Next/Future` priority (the build-to contract) |
+| [AssetArchitecture.md](./AssetArchitecture.md)           | Why asset architecture; the complete folder structure + every folder's 6-field contract                                              |
+| [IconGuidelines.md](./IconGuidelines.md)                 | Icon Registry, categories, the `<Icon>` wrapper, theme-aware + medical icons, custom packs                                           |
+| [SVGStandards.md](./SVGStandards.md)                     | SVG-first strategy, optimization pipeline, sizing/color/stroke, a11y                                                                 |
+| [IllustrationGuidelines.md](./IllustrationGuidelines.md) | Illustration system (empty/error/loading/…) + avatar system                                                                          |
+| [BrandGuidelines.md](./BrandGuidelines.md)               | Logos, themed/mono variants, PDF/invoice/prescription branding, white-label                                                          |
+| [OptimizationGuide.md](./OptimizationGuide.md)           | Compression, responsive images, lazy loading, formats, CDN, performance budgets                                                      |
+| [NamingStandards.md](./NamingStandards.md)               | Asset file + registry-key naming standards                                                                                           |
 
 ## Always-on rules
 

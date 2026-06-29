@@ -33,3 +33,6 @@ pnpm-debug.log*
 *.ntvs*
 *.njsproj
 *.sln
+
+# Claude Code local settings (per-user, not shared)
+.claude/

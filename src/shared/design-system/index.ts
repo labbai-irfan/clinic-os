@@ -63,3 +63,8 @@ export * from './components/tooltip';
 /* Icon Registry (semantic, categorised icons — consume via the <Icon> wrapper) */
 /* -------------------------------------------------------------------------- */
 export * from './icons';
+
+/* -------------------------------------------------------------------------- */
+/* Component Registry (the permanent, machine-checkable component catalog)     */
+/* -------------------------------------------------------------------------- */
+export * from './registry';

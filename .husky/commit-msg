@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
 # Husky commit-msg hook — validate the message against Conventional Commits.
 # POSIX sh for cross-platform parity (Git Bash on Windows, sh on *nix).
-pnpm commitlint --edit "$1"
+# Resolve pnpm whether it is on PATH (normal dev/CI) or only via Corepack.
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm commitlint --edit "$1"
+else
+  corepack pnpm commitlint --edit "$1"
+fi

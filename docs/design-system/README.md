@@ -81,6 +81,33 @@ The contract per layer (Bible §3.6):
 
 ---
 
+## The component & engineering docs (the UI Kit)
+
+The docs above cover **tokens**. The docs below cover the **component library** built on them — its
+architecture, the contract every component must meet, and the developer-experience guides for building,
+documenting, testing, and evolving components. The machine-checkable source of truth is the
+**[Component Registry](../../src/shared/design-system/registry/component-registry.ts)**, validated +
+catalogued by **[`scripts/ds-registry.mjs`](../../scripts/ds-registry.mjs)** (`pnpm ds:registry`).
+
+| Doc                                              | Covers                                                                                                    |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| [DesignSystem.md](./DesignSystem.md)             | The flagship blueprint — why a design system exists, its layers, categories, how it's kept honest         |
+| [ArchitectureGuide.md](./ArchitectureGuide.md)   | The engineering blueprint for the `shared/design-system` package + the performance contract               |
+| [ComponentStandards.md](./ComponentStandards.md) | Parts 5–7 — the contract every component must satisfy to enter `@shared/design-system`                    |
+| [ContributionGuide.md](./ContributionGuide.md)   | Part 13 — step-by-step add/change a component; the Design-System AI Rules; the registry workflow          |
+| [StorybookGuide.md](./StorybookGuide.md)         | Part 9 — CSF3 + autodocs, the a11y addon, theme toolbar, what every story must include, interaction tests |
+| [TestingGuide.md](./TestingGuide.md)             | Part 10 — unit/a11y/interaction/snapshot/performance; which components MUST have which tests              |
+| [MigrationGuide.md](./MigrationGuide.md)         | Part 11 — SemVer, the registry status lifecycle, breaking-change policy, deprecation windows, codemods    |
+| [ComponentRegistry.md](./ComponentRegistry.md)   | The generated catalog of every component (do not hand-edit — run `pnpm ds:registry`)                      |
+| [BestPractices.md](./BestPractices.md)           | Part 13 — the field guide: compose-don't-copy, tokens-only, reuse-first, common-mistakes gallery          |
+
+**Binding rules:** [AI_RULES.md](../architecture/AI_RULES.md) ·
+**Definition of Done:** [Project-Checklist.md](../Project-Checklist.md) ·
+**Registry source:** [`component-registry.ts`](../../src/shared/design-system/registry/component-registry.ts) ·
+**Validator/generator:** [`ds-registry.mjs`](../../scripts/ds-registry.mjs)
+
+---
+
 ## Accessibility note (applies to every doc)
 
 WCAG 2.2 AA is the floor (Bible §9). Three rules cut across all tokens:
