@@ -49,6 +49,8 @@ export default tseslint.config(
       'plopfile.js',
       '.storybook/**',
       'storybook-static/**',
+      'e2e/**',
+      'playwright-report/**',
     ],
   },
 

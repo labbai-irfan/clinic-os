@@ -8,6 +8,14 @@ exhaustive per-phase record lives in
 
 ## [Unreleased]
 
+### Added — Production readiness
+
+- **CI/CD** — `.github/workflows/ci.yml`: runs the full gate (typecheck · lint · format · test · build · `ds:registry` · `check:assets`) on every push to `main` and every PR, plus a Playwright E2E job.
+- **E2E** — `playwright.config.ts` + `e2e/app.e2e.spec.ts`: a smoke suite (app boots, welcome screen renders, theme control switches the appearance live). `pnpm e2e`.
+- **Web essentials** — `public/favicon.svg` (brand mark) + `public/manifest.webmanifest` (installable PWA metadata) + `index.html` favicon/manifest/OG tags.
+- **Repo hygiene** — `LICENSE` (proprietary) + `CONTRIBUTING.md`.
+- **Husky/lint-staged hardening** — hooks resolve `pnpm` via Corepack fallback; lint-staged eslint uses `--no-warn-ignored`. `.claude/` gitignored.
+
 ### Added — Design System Architecture
 
 - **Component Registry (code)** — `src/shared/design-system/registry/component-registry.ts`:

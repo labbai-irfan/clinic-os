@@ -1,0 +1,19 @@
+{
+  "name": "ClinicOS",
+  "short_name": "ClinicOS",
+  "description": "ClinicOS — the digital nervous system of a clinic.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8F3F0",
+  "theme_color": "#E87D7D",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
