@@ -1,0 +1,10 @@
+/** *
+{{kebabCase name}}
+— PUBLIC API (the ONLY legal import surface for this module). * * Other modules / app / processes
+import this module ONLY through this file. * Repositories, services, mappers, schemas, the store,
+endpoints, and DTOs are * PRIVATE — deep-importing past this file is linted-forbidden
+(DependencyRules §7). * * Expose here, as the module grows: * export {
+{{camelCase name}}Routes } from './routes'; * export {
+{{constantCase name}}_PERMISSIONS } from './permissions'; * export type {
+{{pascalCase name}}
+} from './types/{{kebabCase name}}.types'; */ export {};

@@ -1,0 +1,250 @@
+/**
+ * themes.css — semantic-tier theme overrides for ClinicOS.
+ *
+ * Governed by: docs/Frontend-Bible.md §4 (Theming) and docs/Brain.md §6.
+ *
+ * ONLY the semantic tier (Tier 2 in tokens.css) is re-mapped here. Primitives and
+ * component tokens never change between themes — that is what lets a single
+ * attribute swap on <html> re-skin the whole app at runtime with no rebuild.
+ *
+ * Attribute contract (set by shared/theme/theme.ts on <html>):
+ *   data-theme="light" | "dark" | "high-contrast"   (default: light = :root in tokens.css)
+ *   data-large-text="true"                            (Large Text Mode)
+ *   plus OS-level prefers-reduced-motion (and the data-motion override).
+ *
+ * NOTE: The design-system phase (Phase 4) will split high-contrast into the full
+ * hc-light / hc-dark pair from Frontend-Bible §4.2 and add the remaining functional
+ * ramps. This foundation ships a single, AA-safe high-contrast map plus dark.
+ */
+
+/* =========================================================================
+ * DARK THEME — semantic overrides only (Frontend-Bible §4.1)
+ * ========================================================================= */
+[data-theme='dark'] {
+  --color-primary: var(--color-rose-400); /* lift for dark-bg contrast */
+  --color-primary-hover: var(--color-rose-500);
+  --color-primary-active: var(--color-rose-600);
+  --color-primary-subtle: var(--color-stone-800);
+  --color-on-primary: var(--color-stone-900);
+
+  --color-accent: var(--color-teal-300);
+  --color-accent-hover: var(--color-teal-500);
+  --color-on-accent: var(--color-stone-900);
+
+  --color-surface: var(--color-stone-900);
+  --color-surface-raised: var(--color-stone-800);
+  --color-surface-sunken: #1b1716;
+  --color-surface-overlay: rgba(0, 0, 0, 0.6);
+
+  --color-text: var(--color-stone-100);
+  --color-text-muted: var(--color-stone-300);
+  --color-text-subtle: var(--color-stone-400);
+
+  --color-border: var(--color-stone-700);
+  --color-border-strong: var(--color-stone-600);
+  --color-divider: var(--color-stone-800);
+
+  --color-focus: var(--color-teal-300);
+
+  --color-success-subtle: var(--color-stone-800);
+  --color-warning-subtle: var(--color-stone-800);
+  --color-on-warning: var(--color-stone-900);
+  --color-danger-subtle: var(--color-stone-800);
+  --color-info-subtle: var(--color-stone-800);
+
+  /* Soft-UI shadows weaken on dark; lean on surface separation. */
+  --elevation-card: 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+  --elevation-popover: 0 12px 32px -8px rgba(0, 0, 0, 0.7);
+
+  /* ---- NEW Phase-4 semantic tokens re-mapped for dark ---- */
+
+  /* Surfaces (extended) */
+  --color-surface-sidebar: #1b1716;
+  --color-surface-header: var(--color-stone-800);
+  --color-surface-footer: var(--color-stone-900);
+  --color-surface-hover: var(--color-stone-700);
+  --color-surface-active: var(--color-stone-600);
+  --color-surface-selected: var(--color-stone-800);
+  --color-surface-disabled: var(--color-stone-800);
+
+  /* Text (extended) */
+  --color-text-disabled: var(--color-stone-500);
+  --color-text-link: var(--color-teal-300);
+  --color-text-inverse: var(--color-stone-900);
+
+  /* Lines (extended) */
+  --color-outline: var(--color-teal-300);
+
+  /* Skeleton / loading */
+  --color-skeleton-base: var(--color-stone-800);
+  --color-skeleton-highlight: var(--color-stone-700);
+
+  /* Status — keep DEFAULT hues (they read on dark), darken the -subtle backings */
+  --color-status-scheduled-subtle: var(--color-stone-800);
+  --color-status-waiting-subtle: var(--color-stone-800);
+  --color-status-called-subtle: var(--color-stone-800);
+  --color-status-in-progress-subtle: var(--color-stone-800);
+  --color-status-completed-subtle: var(--color-stone-800);
+  --color-status-no-show-subtle: var(--color-stone-800);
+  --color-status-cancelled-subtle: var(--color-stone-800);
+
+  /* Vitals — keep DEFAULT hues, darken the -subtle backings */
+  --color-vital-normal-subtle: var(--color-stone-800);
+  --color-vital-low-subtle: var(--color-stone-800);
+  --color-vital-elevated-subtle: var(--color-stone-800);
+  --color-vital-high-subtle: var(--color-stone-800);
+  --color-vital-critical-subtle: var(--color-stone-800);
+
+  /* Chart axes/grid on dark */
+  --color-chart-grid: var(--color-stone-700);
+  --color-chart-axis: var(--color-stone-400);
+
+  /* Emergency stays vivid even on dark (life-safety overrides theme). */
+  --color-emergency: var(--color-emergency-500);
+}
+
+/* =========================================================================
+ * HIGH-CONTRAST THEME — thicker borders, max contrast, no soft shadows.
+ * WCAG AAA-leaning. (Foundation subset of Frontend-Bible §4.2.)
+ * ========================================================================= */
+[data-theme='high-contrast'] {
+  --color-surface: var(--color-white);
+  --color-surface-raised: var(--color-white);
+  --color-surface-sunken: var(--color-white);
+  --color-surface-overlay: rgba(0, 0, 0, 0.6);
+
+  --color-text: var(--color-black);
+  --color-text-muted: var(--color-stone-900); /* no low-contrast greys */
+  --color-text-subtle: var(--color-stone-900);
+
+  --color-primary: var(--color-rose-800); /* darkened for AAA on white */
+  --color-primary-hover: var(--color-rose-800);
+  --color-primary-active: var(--color-rose-800);
+  --color-on-primary: var(--color-white);
+
+  --color-border: var(--color-black);
+  --color-border-strong: var(--color-black);
+  --color-divider: var(--color-black);
+
+  --color-focus: var(--color-black);
+  --focus-ring-width: var(--border-width-4); /* thicker ring */
+
+  --color-success: var(--color-success-700);
+  --color-warning: var(--color-warning-500);
+  --color-on-warning: var(--color-black);
+  --color-danger: var(--color-danger-700);
+  --color-info: var(--color-info-500);
+
+  /* Borders, not shadows, in high contrast. */
+  --elevation-card: none;
+  --elevation-popover: none;
+
+  /* ---- NEW Phase-4 semantic tokens re-mapped for high-contrast ---- */
+
+  /* Lines (extended) — outline goes to pure black. */
+  --color-outline: var(--color-black);
+
+  /* Text (extended) — no low-contrast greys; disabled darkens to near-black. */
+  --color-text-disabled: var(--color-stone-900);
+
+  /* Skeleton — solid, high-contrast placeholder (no shimmer-grey). */
+  --color-skeleton-base: var(--color-stone-200);
+  --color-skeleton-highlight: var(--color-stone-200);
+
+  /* Queue status — bump to the -700 primitives for AAA contrast on white. */
+  --color-status-scheduled: var(--color-stone-700);
+  --color-status-waiting: var(--color-info-700);
+  --color-status-called: var(--color-warning-700);
+  --color-status-in-progress: var(--color-teal-700);
+  --color-status-completed: var(--color-success-700);
+  --color-status-no-show: var(--color-stone-700);
+  --color-status-cancelled: var(--color-danger-700);
+
+  /* Vitals — bump to the -700 primitives for AAA contrast on white. */
+  --color-vital-normal: var(--color-success-700);
+  --color-vital-low: var(--color-info-700);
+  --color-vital-elevated: var(--color-warning-700);
+  --color-vital-high: var(--color-danger-700);
+  --color-vital-critical: var(--color-emergency-700);
+
+  /* Emergency stays vivid (life-safety overrides contrast theme). */
+  --color-emergency: var(--color-emergency-500);
+}
+
+/* =========================================================================
+ * LARGE TEXT MODE — scale the root; the whole UI grows proportionally.
+ * Because the type scale + targets derive from --font-scale (Frontend-Bible §4.3).
+ * ========================================================================= */
+[data-large-text='true'] {
+  --font-scale: 1.25;
+  --tap-target-min: var(--space-16); /* 64px → controls grow automatically */
+  --button-height-md: var(--space-16);
+}
+
+/* =========================================================================
+ * REDUCED MOTION — honor OS preference and the data-motion="reduced" override.
+ * Essential feedback degrades to an instant state; it is never removed.
+ * (Frontend-Bible §10.2 · Brain §7)
+ * ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion='reduced'] *,
+[data-motion='reduced'] *::before,
+[data-motion='reduced'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* =========================================================================
+ * WHITE-LABEL HOOK — per-clinic brand re-mapping (Frontend-Bible Part 12).
+ *
+ * This is the white-label EXTENSION POINT. A clinic re-skins ClinicOS by
+ * setting `data-clinic-theme="<clinic-id>"` on <html> and re-mapping ONLY the
+ * brand semantic tokens (--color-primary* / --color-accent*) to a primitive
+ * family. Nothing else changes — surfaces, text, functional, status, vital and
+ * component tokens all inherit, so a single attribute swap rebrands the app at
+ * runtime with no rebuild. Stack it with data-theme/data-large-text freely.
+ *
+ * Re-map ONLY brand tokens here. Never re-map surfaces/text/functional/status —
+ * those carry meaning (e.g. danger, vital-critical) that must stay consistent
+ * across every clinic. Add one block per clinic id; the example below is the
+ * canonical worked example.
+ * ========================================================================= */
+
+/* Worked example — "Sample Clinic" rebrands primary to the teal family. */
+[data-clinic-theme='sample-clinic'] {
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-primary-subtle: var(--color-teal-50);
+  --color-on-primary: var(--color-white);
+
+  --color-accent: var(--color-rose-500);
+  --color-accent-hover: var(--color-rose-600);
+  --color-on-accent: var(--color-white);
+}
+
+/* =========================================================================
+ * COMPACT DENSITY — tighten spacing-driven component tokens (Phase 5 engine).
+ *
+ * Set by the engine as `data-density="compact"` on <html>. Comfortable is the
+ * default and needs no block. Only spacing tokens are re-mapped here so the
+ * whole layout compresses via a single attribute swap — no component re-render.
+ * ========================================================================= */
+[data-density='compact'] {
+  --card-padding: var(--space-4);
+  --layout-page-padding: var(--space-4);
+  --table-cell-padding-y: var(--space-2);
+  --button-padding-x: var(--space-4);
+}

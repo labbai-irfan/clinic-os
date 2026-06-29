@@ -1,0 +1,164 @@
+/**
+ * tokens/components.css — TIER 3 (COMPONENT) design tokens for ClinicOS.
+ *
+ * Governed by: docs/Frontend-Bible.md §3 + docs/design-system/ (Phase 4).
+ *
+ * Tier 3 = per-component aliases. Component CSS reads THESE exclusively, so a
+ * single re-alias re-skins a component. RULE: every value here references a
+ * SEMANTIC (Tier 2) token via var(--…). NEVER a primitive, NEVER a raw value.
+ *
+ * Themes (dark / high-contrast / large-text) re-map ONLY the semantic tier;
+ * these component tokens inherit those swaps for free and never change per theme.
+ *
+ * Loaded via the tokens.css barrel AFTER primitives.css + semantic.css.
+ */
+
+:root {
+  /* ---- Button (primary) ---- */
+  --button-bg: var(--color-primary);
+  --button-bg-hover: var(--color-primary-hover);
+  --button-bg-active: var(--color-primary-active);
+  --button-fg: var(--color-on-primary);
+  --button-border: var(--color-primary);
+  --button-radius: var(--radius-control);
+  --button-height-sm: 2.25rem;
+  --button-height-md: var(--space-12);
+  --button-height-lg: var(--space-16);
+  --button-padding-x: var(--space-5);
+  --button-gap: var(--space-2);
+  --button-font-size: var(--text-button);
+  --button-font-weight: var(--weight-button);
+
+  /* ---- Button (secondary — outline on surface) ---- */
+  --button-secondary-bg: transparent;
+  --button-secondary-bg-hover: var(--color-surface-hover);
+  --button-secondary-bg-active: var(--color-surface-active);
+  --button-secondary-border: var(--color-border-strong);
+  --button-secondary-fg: var(--color-text);
+
+  /* ---- Button (ghost — text-only, fills on hover) ---- */
+  --button-ghost-bg: transparent;
+  --button-ghost-bg-hover: var(--color-surface-hover);
+  --button-ghost-bg-active: var(--color-surface-active);
+  --button-ghost-fg: var(--color-text);
+
+  /* ---- Input (text fields, selects, textareas) ---- */
+  --input-bg: var(--color-surface-raised);
+  --input-border: var(--color-border);
+  --input-border-hover: var(--color-border-strong);
+  --input-border-focus: var(--color-focus);
+  --input-radius: var(--radius-field);
+  --input-height: var(--space-12);
+  --input-padding-x: var(--space-4);
+  --input-fg: var(--color-text);
+  --input-placeholder: var(--color-text-subtle);
+  --input-font-size: var(--text-form);
+
+  /* ---- Card ---- */
+  --card-bg: var(--color-surface-raised);
+  --card-radius: var(--radius-card);
+  --card-padding: var(--space-6);
+  --card-border: var(--color-border);
+  --card-shadow: var(--elevation-card);
+  --card-gap: var(--space-4);
+
+  /* ---- Badge / chip ---- */
+  --badge-radius: var(--radius-pill);
+  --badge-padding-x: var(--space-2);
+  --badge-font-size: var(--text-overline);
+  --badge-height: 1.5rem;
+
+  /* ---- Table ---- */
+  --table-header-bg: var(--color-surface-sunken);
+  --table-row-hover: var(--color-surface-hover);
+  --table-border: var(--color-divider);
+  --table-cell-padding-x: var(--space-4);
+  --table-cell-padding-y: var(--space-3);
+  --table-font-size: var(--text-table);
+
+  /* ---- Dialog / modal ---- */
+  --dialog-bg: var(--color-surface-raised);
+  --dialog-radius: var(--radius-surface);
+  --dialog-padding: var(--space-6);
+  --dialog-shadow: var(--elevation-modal);
+  --dialog-overlay: var(--color-surface-overlay);
+  --dialog-max-width: 32rem;
+
+  /* ---- Drawer (off-canvas panel) ---- */
+  --drawer-bg: var(--color-surface-raised);
+  --drawer-shadow: var(--elevation-modal);
+  --drawer-width: 22rem;
+
+  /* ---- Tooltip ---- */
+  --tooltip-bg: var(--color-stone-900);
+  --tooltip-fg: var(--color-white);
+  --tooltip-radius: var(--radius-sm);
+  --tooltip-padding: var(--space-2);
+  --tooltip-font-size: var(--text-tooltip);
+
+  /* ---- Popover ---- */
+  --popover-bg: var(--color-surface-raised);
+  --popover-radius: var(--radius-card);
+  --popover-shadow: var(--elevation-popover);
+  --popover-padding: var(--space-4);
+
+  /* ---- Sidebar (primary navigation) ---- */
+  --sidebar-bg: var(--color-surface-sidebar);
+  --sidebar-width: var(--layout-sidebar-width);
+  --sidebar-item-radius: var(--radius-control);
+  --sidebar-item-active-bg: var(--color-surface-selected);
+  --sidebar-item-active-fg: var(--color-primary);
+  --sidebar-item-hover-bg: var(--color-surface-hover);
+
+  /* ---- Header (top app bar) ---- */
+  --header-bg: var(--color-surface-header);
+  --header-height: var(--layout-header-height);
+  --header-border: var(--color-border);
+  --header-shadow: var(--elevation-sticky);
+
+  /* ---- Skeleton (loading placeholder) ---- */
+  --skeleton-base: var(--color-skeleton-base);
+  --skeleton-highlight: var(--color-skeleton-highlight);
+  --skeleton-radius: var(--radius-sm);
+
+  /* ---- Avatar ---- */
+  --avatar-radius: var(--radius-full);
+  --avatar-size-md: var(--space-10);
+
+  /* ---- Switch / Checkbox (selection controls) ---- */
+  --switch-radius: var(--radius-full);
+  --switch-size: var(--space-5);
+  --switch-checked-bg: var(--color-primary);
+  --checkbox-radius: var(--radius-sm);
+  --checkbox-size: var(--space-5);
+  --checkbox-checked-bg: var(--color-primary);
+}
+
+/**
+ * Keyframes — component animations.
+ *
+ * NOTE: Both keyframes are GLOBALLY reduced-motion-gated in themes.css
+ * (the `@media (prefers-reduced-motion: reduce)` block and the
+ * `[data-motion='reduced']` override force animation-duration to ~0). Consumers
+ * do NOT need to re-gate; just attach these animations.
+ */
+
+/* Skeleton shimmer sweep — pair with --skeleton-base / --skeleton-highlight. */
+@keyframes cos-skeleton-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Spinner rotation — pair with --color-loading. */
+@keyframes cos-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

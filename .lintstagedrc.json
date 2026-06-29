@@ -1,0 +1,6 @@
+{
+  "//": "lint-staged — run linters/formatters on STAGED files only (fast pre-commit gate). Governed by docs/architecture/DependencyRules.md FF12.",
+  "*.{ts,tsx}": ["eslint --fix --max-warnings 0", "prettier --write"],
+  "*.{js,jsx,cjs,mjs}": ["eslint --fix --max-warnings 0", "prettier --write"],
+  "*.{json,md,css,html,yml,yaml}": ["prettier --write"]
+}

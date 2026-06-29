@@ -1,0 +1,49 @@
+<!doctype html>
+<!--
+  ClinicOS application entry document.
+
+  Minimal by design: charset, responsive viewport, theme-color, and a
+  description meta; a single #root mount node; and the ESM bootstrap module.
+  No framework boilerplate or logos. The <html lang> is overridden at runtime
+  by the localization engine (and dir is flipped for RTL locales like Urdu).
+
+  Governed by: Phase 3 BUILD SPEC, docs/Coding-Standards.md §12-13 (a11y / i18n).
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#E87D7D" />
+    <meta name="description" content="ClinicOS — the digital nervous system of a clinic." />
+    <title>ClinicOS</title>
+    <!--
+      No-flash theme bootstrap. Runs BEFORE the module script so <html> carries the
+      correct data-* attributes pre-paint (no flash-of-incorrect-theme). Self-contained:
+      reads the same individual STORAGE_KEYS the engine writes, with no module imports.
+    -->
+    <script>
+      (function () {
+        try {
+          var ns = 'clinicos:',
+            d = document.documentElement,
+            ls = window.localStorage;
+          var mode = ls.getItem(ns + 'theme') || 'system';
+          var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          d.setAttribute('data-theme', mode === 'system' ? (dark ? 'dark' : 'light') : mode);
+          if (ls.getItem(ns + 'large-text') === 'true') d.setAttribute('data-large-text', 'true');
+          var rm = ls.getItem(ns + 'reduced-motion');
+          if (rm === 'true') d.setAttribute('data-motion', 'reduced');
+          else if (rm === 'false') d.setAttribute('data-motion', 'normal');
+          var dens = ls.getItem(ns + 'density');
+          if (dens) d.setAttribute('data-density', dens);
+          var brand = ls.getItem(ns + 'clinic-brand');
+          if (brand) d.setAttribute('data-clinic-theme', brand);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# Husky pre-commit hook — run lint-staged over the staged files only.
+# POSIX sh for cross-platform parity (Git Bash on Windows, sh on *nix).
+pnpm lint-staged

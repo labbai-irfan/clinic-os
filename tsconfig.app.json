@@ -1,0 +1,70 @@
+/**
+ * Application TypeScript project for ClinicOS (`src/**`).
+ *
+ * Purpose: compile the React app under the FULL strict safety set mandated by
+ * docs/Coding-Standards.md §2.1. This is the single source of truth for the
+ * path aliases (Phase 3 BUILD SPEC) — Vite reads them via `vite-tsconfig-paths`,
+ * so aliases never need to be re-declared anywhere else.
+ *
+ * Governed by: docs/Coding-Standards.md §2 (TypeScript standards),
+ * docs/Naming-Convention.md, docs/architecture/FolderStructure.md.
+ */
+{
+  "compilerOptions": {
+    /* Project graph (built via the root solution tsconfig) */
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    /* Language + module target — modern browsers, ESM, bundler resolution */
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "useDefineForClassFields": true,
+    "jsx": "react-jsx",
+
+    /* Vite owns emit; tsc is a pure type-checker here */
+    "noEmit": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+
+    /* --- Strict safety set (Coding-Standards §2.1 — NEVER loosen) --- */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "useUnknownInCatchVariables": true,
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* --- Canonical path aliases (single source of truth) --- */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@processes/*": ["src/processes/*"],
+      "@modules/*": ["src/modules/*"],
+      "@entities/*": ["src/entities/*"],
+      "@shared/*": ["src/shared/*"],
+      "@assets/*": ["src/assets/*"],
+      "@testing/*": ["src/testing/*"],
+      "@mock/*": ["src/mock/*"],
+      "@locales/*": ["src/locales/*"]
+    },
+
+    /* Ambient client typings (import.meta.env etc.) */
+    "types": ["vite/client", "node"]
+  },
+  "include": ["src", "src/vite-env.d.ts"],
+  // Tests are intentionally kept in this project so they are type-checked (tsc -b)
+  // and resolvable by typescript-eslint's project service. Vite builds from the
+  // entry module, so test files are never bundled into production output.
+  "exclude": ["node_modules", "dist"]
+}

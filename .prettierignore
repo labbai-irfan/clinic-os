@@ -1,0 +1,19 @@
+# Prettier ignore — keep generated / vendored / non-source output untouched.
+# Source of formatting truth: .prettierrc.json
+node_modules
+dist
+coverage
+.vite
+playwright-report
+test-results
+stats.html
+pnpm-lock.yaml
+*.log
+.husky
+src/locales/**/*.json
+CHANGELOG.md
+
+# Handlebars generator templates hold TSX/Markdown with {{placeholders}} —
+# Prettier's handlebars parser cannot parse them. ESLint ignores them too.
+scripts/templates
+*.hbs

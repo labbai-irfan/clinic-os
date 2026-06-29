@@ -1,0 +1,24 @@
+# {{pascalCase name}} module
+
+> Bounded context: `modules/{{kebabCase name}}`. One mini Clean Architecture app behind a single `index.ts`.
+
+- **Owner:** `@clinicos/{{kebabCase name}}-team` (set CODEOWNERS).
+- **Purpose:** _One paragraph — what user capability this context owns._
+
+## Public API
+
+Other modules import this module **only** via `@modules/{{kebabCase name}}` (its `index.ts`).
+List the exposed surface here as it grows (routes, permissions, a few widget-grade
+components, selected query hooks, Domain **Model** types — never DTOs).
+
+## Allowed dependencies
+
+- `@entities/*` (via each entity's public index)
+- `@shared/*`
+- other modules **only** via their `@modules/<name>` public index
+
+## Canon
+
+- [FeatureArchitecture.md](../../../docs/architecture/FeatureArchitecture.md) — the module template.
+- [DependencyRules.md](../../../docs/architecture/DependencyRules.md) — who may import whom.
+- [Naming-Convention.md](../../../docs/Naming-Convention.md) — file & symbol naming.

@@ -1,0 +1,43 @@
+{
+  // Debug configurations for ClinicOS.
+  //  - "Vite: Chrome" attaches the Chrome debugger to the running dev server.
+  //  - "Vitest: Current File" / "Vitest: All" run tests under the JS debugger.
+  // Start the dev server first (`pnpm dev`) before launching the Chrome config.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Vite: Chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*",
+        "/@fs/*": "*"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Vitest: Current File",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${relativeFile}"],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Vitest: All",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+      "args": ["run"],
+      "smartStep": true,
+      "console": "integratedTerminal"
+    }
+  ]
+}

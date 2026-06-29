@@ -1,0 +1,24 @@
+/**
+ * tokens.css — ClinicOS design-token BARREL (3-tier entry point).
+ *
+ * Governed by: docs/Frontend-Bible.md §3 (color) / §5 (type) and docs/Brain.md §6.
+ *
+ * As of Phase 4 the token system is split into three tiers, each in its own
+ * file under tokens/. This barrel simply imports them, in dependency order, so
+ * a single `@import '../../shared/styles/tokens.css'` pulls in the whole system.
+ *
+ *   Tier 1 PRIMITIVE  (tokens/primitives.css) — raw scale values. Raw hex / px /
+ *                      ms / unitless numbers live ONLY here.
+ *   Tier 2 SEMANTIC   (tokens/semantic.css)   — intent tokens (themeable);
+ *                      reference primitives via var(). Components consume THESE.
+ *   Tier 3 COMPONENT  (tokens/components.css) — per-component aliases; reference
+ *                      semantic only, never primitives.
+ *
+ * Theme overrides (dark / high-contrast / large-text / reduced-motion) live in
+ * themes.css and re-map ONLY the semantic tier. Import order matters: primitives
+ * must load before semantic, and semantic before components.
+ */
+
+@import './tokens/primitives.css';
+@import './tokens/semantic.css';
+@import './tokens/components.css';

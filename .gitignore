@@ -1,0 +1,35 @@
+# ClinicOS — version-control ignore list.
+# Keep the repo to source + committed (non-secret) config only.
+
+# Dependencies
+node_modules
+
+# Build & cache output
+dist
+coverage
+.vite
+.turbo
+
+# Local-only environment (NEVER commit secrets; .env.local is user-only)
+.env.local
+.env.*.local
+*.local
+
+# Test / tooling artifacts
+playwright-report
+test-results
+stats.html
+storybook-static
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS & editor noise
+.DS_Store
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

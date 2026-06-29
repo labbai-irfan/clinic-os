@@ -1,0 +1,16 @@
+{
+  // Recommended extensions for ClinicOS contributors. VS Code prompts to install
+  // these on first open so everyone gets identical lint/format/test tooling.
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "streetsidesoftware.code-spell-checker",
+    "ms-playwright.playwright",
+    "vitest.explorer",
+    "lokalise.i18n-ally",
+    "usernamehw.errorlens",
+    "eamodio.gitlens"
+  ],
+  "unwantedRecommendations": ["hookyqr.beautify", "dbaeumer.jshint"]
+}

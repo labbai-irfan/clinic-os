@@ -1,0 +1,231 @@
+/**
+ * tokens/semantic.css — ClinicOS Tier 2 SEMANTIC tokens (Phase 4).
+ *
+ * Governed by: docs/Frontend-Bible.md §3 (token system) and docs/Brain.md §6.
+ *
+ * Tier 2 SEMANTIC = intent tokens. Components consume THESE (or the Tier-3
+ * component aliases) — NEVER primitives. Every value below references a Tier-1
+ * primitive (tokens/primitives.css) or another semantic token via var(--…);
+ * a semantic token NEVER holds a raw hex/px/ms value.
+ *
+ * This `:root` block is the LIGHT theme (the default map). Themes re-map ONLY
+ * this tier — see themes.css.
+ *
+ * Healthcare palette is intentionally CALM/muted — EXCEPT `emergency`, which is
+ * deliberately vivid (life-safety overrides calm). All functional/status/vital
+ * colors are color-blind-safe (distinct in hue AND lightness) and MUST always be
+ * paired with an icon/text label — never color alone.
+ */
+
+:root {
+  /* =========================================================================
+   * EXISTING SEMANTIC TOKENS (Phases 1–3) — copied VERBATIM. Do not change.
+   * ========================================================================= */
+
+  /* Brand / interactive */
+  --color-primary: var(--color-rose-500);
+  --color-primary-hover: var(--color-rose-600);
+  --color-primary-active: var(--color-rose-700);
+  --color-primary-subtle: var(--color-rose-50);
+  --color-on-primary: var(--color-white);
+
+  --color-accent: var(--color-teal-500);
+  --color-accent-hover: var(--color-teal-600);
+  --color-on-accent: var(--color-white);
+
+  /* Surfaces */
+  --color-surface: var(--color-sand-100); /* app background */
+  --color-surface-raised: var(--color-white); /* cards, modals */
+  --color-surface-sunken: var(--color-sand-200);
+  --color-surface-overlay: rgba(36, 31, 30, 0.45); /* scrim */
+
+  /* Text (warm neutrals — never pure black) */
+  --color-text: var(--color-stone-900);
+  --color-text-muted: var(--color-stone-600);
+  --color-text-subtle: var(--color-stone-500);
+
+  /* Lines */
+  --color-border: var(--color-sand-300);
+  --color-border-strong: var(--color-stone-300);
+  --color-divider: var(--color-sand-200);
+
+  /* Focus (token-driven :focus-visible ring — Brain §7) */
+  --color-focus: var(--color-teal-600);
+  --focus-ring-width: var(--border-width-2);
+  --focus-ring-offset: var(--border-width-2);
+
+  /* Functional + their on-colors */
+  --color-success: var(--color-success-500);
+  --color-success-subtle: var(--color-success-50);
+  --color-on-success: var(--color-white);
+
+  --color-warning: var(--color-warning-500);
+  --color-warning-subtle: var(--color-warning-50);
+  --color-on-warning: var(--color-stone-900); /* amber needs DARK text */
+
+  --color-danger: var(--color-danger-500);
+  --color-danger-subtle: var(--color-danger-50);
+  --color-on-danger: var(--color-white);
+
+  --color-info: var(--color-info-500);
+  --color-info-subtle: var(--color-info-50);
+  --color-on-info: var(--color-white);
+
+  /* Semantic aliases for primitive scales (keep components theme-able) */
+  --elevation-card: var(--shadow-md);
+  --elevation-popover: var(--shadow-lg);
+  --radius-control: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-surface: var(--radius-xl);
+
+  /* =========================================================================
+   * NEW SEMANTIC TOKENS (Phase 4) — purely additive.
+   * ========================================================================= */
+
+  /* ---- Surfaces (extended) ---- */
+  --color-surface-sidebar: var(--color-sand-50);
+  --color-surface-header: var(--color-surface-raised);
+  --color-surface-footer: var(--color-surface);
+  --color-surface-hover: var(--color-sand-200);
+  --color-surface-active: var(--color-sand-300);
+  --color-surface-selected: var(--color-primary-subtle);
+  --color-surface-disabled: var(--color-stone-100);
+
+  /* ---- Text (extended) ---- */
+  --color-text-on-surface: var(--color-text);
+  --color-text-disabled: var(--color-stone-400);
+  --color-text-link: var(--color-teal-700);
+  --color-text-inverse: var(--color-white);
+
+  /* ---- Lines (extended) ---- */
+  --color-outline: var(--color-teal-600);
+  --color-border-disabled: var(--color-stone-200);
+  --color-overlay: var(--color-surface-overlay); /* alias */
+
+  /* ---- State / selection ---- */
+  --color-selection-bg: var(--color-primary-subtle);
+  --color-selection-text: var(--color-primary);
+  --color-pressed: var(--color-surface-active);
+  --color-hover: var(--color-surface-hover);
+  --color-disabled-bg: var(--color-surface-disabled);
+  --color-disabled-fg: var(--color-text-disabled);
+  --color-disabled-border: var(--color-border-disabled);
+
+  /* ---- Skeleton / loading ---- */
+  --color-skeleton-base: var(--color-sand-200);
+  --color-skeleton-highlight: var(--color-sand-100);
+  --color-loading: var(--color-primary);
+
+  /* ---- Functional hovers (600 steps) ---- */
+  --color-success-hover: var(--color-success-600);
+  --color-danger-hover: var(--color-danger-600);
+  --color-warning-hover: var(--color-warning-600);
+  --color-info-hover: var(--color-info-600);
+
+  /* ---- Emergency (vivid — life-safety only; the ONE non-calm family) ---- */
+  --color-emergency: var(--color-emergency-500);
+  --color-emergency-hover: var(--color-emergency-600);
+  --color-emergency-subtle: var(--color-emergency-50);
+  --color-on-emergency: var(--color-white);
+
+  /* ---- Queue status (ClinicOS queue lifecycle) ----
+   * Color-blind-safe; each MUST be paired with a label/icon, never color alone.
+   */
+  --color-status-scheduled: var(--color-stone-400);
+  --color-status-waiting: var(--color-info-500);
+  --color-status-called: var(--color-warning-500);
+  --color-status-in-progress: var(--color-teal-500);
+  --color-status-completed: var(--color-success-500);
+  --color-status-no-show: var(--color-stone-500);
+  --color-status-cancelled: var(--color-danger-500);
+
+  /* status — subtle backgrounds (matching -50 primitive; neutrals use stone-50) */
+  --color-status-scheduled-subtle: var(--color-stone-50);
+  --color-status-waiting-subtle: var(--color-info-50);
+  --color-status-called-subtle: var(--color-warning-50);
+  --color-status-in-progress-subtle: var(--color-teal-50);
+  --color-status-completed-subtle: var(--color-success-50);
+  --color-status-no-show-subtle: var(--color-stone-50);
+  --color-status-cancelled-subtle: var(--color-danger-50);
+
+  /* status — on-colors (warning/scheduled use dark text; rest white) */
+  --color-on-status-scheduled: var(--color-stone-900);
+  --color-on-status-waiting: var(--color-white);
+  --color-on-status-called: var(--color-stone-900);
+  --color-on-status-in-progress: var(--color-white);
+  --color-on-status-completed: var(--color-white);
+  --color-on-status-no-show: var(--color-white);
+  --color-on-status-cancelled: var(--color-white);
+
+  /* ---- Medical / vitals severity (triage; pair with text/icon) ---- */
+  --color-vital-normal: var(--color-success-500);
+  --color-vital-low: var(--color-info-500);
+  --color-vital-elevated: var(--color-warning-500);
+  --color-vital-high: var(--color-danger-500);
+  --color-vital-critical: var(--color-emergency-500);
+
+  --color-vital-normal-subtle: var(--color-success-50);
+  --color-vital-low-subtle: var(--color-info-50);
+  --color-vital-elevated-subtle: var(--color-warning-50);
+  --color-vital-high-subtle: var(--color-danger-50);
+  --color-vital-critical-subtle: var(--color-emergency-50);
+
+  /* ---- Notification (map to functional) ---- */
+  --color-notify-info: var(--color-info-500);
+  --color-notify-success: var(--color-success-500);
+  --color-notify-warning: var(--color-warning-500);
+  --color-notify-danger: var(--color-danger-500);
+  --color-notify-unread: var(--color-primary);
+
+  /* ---- Chart (semantic aliases of categorical primitives) ---- */
+  --color-chart-1: var(--color-chart-1);
+  --color-chart-2: var(--color-chart-2);
+  --color-chart-3: var(--color-chart-3);
+  --color-chart-4: var(--color-chart-4);
+  --color-chart-5: var(--color-chart-5);
+  --color-chart-6: var(--color-chart-6);
+  --color-chart-7: var(--color-chart-7);
+  --color-chart-8: var(--color-chart-8);
+  --color-chart-grid: var(--color-divider);
+  --color-chart-axis: var(--color-text-subtle);
+
+  /* ---- Typography role aliases (the named roles → type scale) ---- */
+  --text-title: var(--text-h3);
+  --leading-title: var(--leading-h3);
+  --weight-title: var(--weight-h3);
+
+  --text-subtitle: var(--text-h5);
+  --leading-subtitle: var(--leading-h5);
+
+  --text-label: var(--text-body-sm);
+  --weight-label: var(--weight-semibold);
+
+  --text-button: var(--text-body-md);
+  --weight-button: var(--weight-semibold);
+
+  --text-nav: var(--text-body-md);
+  --text-table: var(--text-body-sm);
+  --text-form: var(--text-body-md);
+  --text-tooltip: var(--text-caption);
+  --text-chart: var(--text-overline);
+  --text-dialog-title: var(--text-h4);
+  --text-medical-doc: var(--text-body-md);
+
+  /* ---- Semantic aliases (extended) ---- */
+  --elevation-modal: var(--shadow-xl);
+  --elevation-dropdown: var(--shadow-md);
+  --elevation-sticky: var(--shadow-sm);
+  --elevation-sidebar: var(--shadow-sm);
+  --radius-pill: var(--radius-full);
+  --radius-field: var(--radius-control);
+
+  /* ---- Layout semantics ---- */
+  --layout-sidebar-width: 17rem;
+  --layout-sidebar-collapsed: 4.5rem;
+  --layout-header-height: var(--space-16);
+  --layout-page-padding: var(--space-6);
+  --layout-content-max: var(--container-xl);
+  --bento-gap: var(--space-4);
+  --bento-radius: var(--radius-xl);
+  --bento-tile-min: 16rem;
+}

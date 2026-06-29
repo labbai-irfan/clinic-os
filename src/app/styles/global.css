@@ -1,0 +1,152 @@
+/**
+ * global.css — the single global stylesheet entry point.
+ *
+ * Governed by: docs/Frontend-Bible.md §3 (tokens), §4 (theming), §5 (typography), §9 (a11y).
+ *
+ * Order matters:
+ *   1. tokens.css   — Tier 1/2/3 token definitions (must load first; @import precedes all).
+ *   2. themes.css   — semantic overrides per theme/mode (re-map the semantic tier).
+ *   3. @tailwind    — base (preflight) → components → utilities. REQUIRED for utilities to
+ *                     generate; the design-system components consume Tailwind utilities that
+ *                     resolve to the CSS-variable tokens above.
+ *   4. @layer base  — the custom, calm, logical-property reset + fonts (lives in the base
+ *                     layer so utilities always win in the cascade).
+ *
+ * NOTE (Phase 6): the @tailwind directives were added here to actually emit Tailwind's
+ * layers. Before this, the Tailwind config existed but no utilities were generated.
+ */
+
+@import '../../shared/styles/tokens.css';
+@import '../../shared/styles/themes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================================================================
+ * BASE LAYER — fonts + minimal, calm, logical-property reset (Tailwind utilities
+ * override these because the utilities layer is emitted after base).
+ * =========================================================================== */
+@layer base {
+  /* FONTS — self-hosted variable fonts are loaded as JS imports in src/app/main.tsx
+   * via Fontsource (@fontsource-variable/inter + @fontsource-variable/plus-jakarta-sans),
+   * which inject their own @font-face for the 'Inter Variable' / 'Plus Jakarta Sans
+   * Variable' families the tokens reference (no font CDN at runtime — privacy/PHI safe). */
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-block-size: 100vh;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-body-md);
+    line-height: var(--leading-body-md);
+    /* Prevent layout shift from scrollbar appearing/disappearing. */
+    scrollbar-gutter: stable;
+  }
+
+  /* Media defaults — never overflow their container. */
+  img,
+  picture,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  /* Form controls inherit typography (no UA font surprises). */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Headings use the heading family + balanced wrapping. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Token-driven :focus-visible ring on every focusable element (Brain §7).
+   * Components may opt out with `focus-visible:outline-none` (a utility, which wins)
+   * and supply their own ring. */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+/* ===========================================================================
+ * COMPONENTS LAYER — small global helpers not worth a component.
+ * =========================================================================== */
+@layer components {
+  /* Skip-to-content link: visually hidden until focused (WCAG 2.4.1). */
+  .skip-link {
+    position: absolute;
+    inset-block-start: var(--space-2);
+    inset-inline-start: var(--space-2);
+    z-index: var(--z-toast);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-surface-raised);
+    color: var(--color-text);
+    border-radius: var(--radius-control);
+    box-shadow: var(--elevation-popover);
+    transform: translateY(-200%);
+    transition: transform var(--duration-fast) var(--ease-standard);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  /* Visually hidden but announced to assistive tech (mirrors Tailwind's `sr-only`). */
+  .sr-only {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ===========================================================================
+ * REDUCED MOTION — global safety net (Frontend-Bible §10.2). Component-level
+ * motion-reduce utilities + the data-motion override live in themes.css.
+ * =========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

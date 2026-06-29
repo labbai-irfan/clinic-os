@@ -1,0 +1,90 @@
+{
+  "app": {
+    "name": "ClinicOS"
+  },
+  "common": {
+    "loading": "Loading…"
+  },
+  "foundation": {
+    "ready": {
+      "title": "Foundation Ready",
+      "subtitle": "The ClinicOS engineering foundation is in place. Product features arrive in the next phases."
+    }
+  },
+  "errors": {
+    "unexpected": {
+      "title": "Something went wrong",
+      "message": "Something went wrong on our side. Please try again.",
+      "retry": "Try again"
+    },
+    "network": {
+      "message": "We couldn't reach the server. Check your connection and try again."
+    },
+    "timeout": {
+      "message": "That took too long. Please try again."
+    },
+    "validation": {
+      "message": "Some details don't look right. Please check and try again."
+    },
+    "notFound": {
+      "message": "We couldn't find what you were looking for."
+    },
+    "permission": {
+      "message": "You don't have permission to do that."
+    },
+    "unauthorized": {
+      "message": "Please sign in to continue."
+    },
+    "conflict": {
+      "message": "This was just updated elsewhere. Please refresh and try again."
+    },
+    "server": {
+      "message": "Something went wrong on our side. Please try again shortly."
+    }
+  },
+  "notifications": {
+    "success": "Done.",
+    "error": "Something went wrong.",
+    "info": "Heads up.",
+    "warning": "Please check this."
+  },
+  "welcome": {
+    "eyebrow": "Clinic Operating System",
+    "title": "Your clinic, beautifully in order",
+    "subtitle": "A calm, accessible operating system for the whole clinic. This is the live design system — change the theme and watch every token respond.",
+    "showcase": "Design system at a glance",
+    "componentsTitle": "Components",
+    "componentsDesc": "Tokenised, accessible, theme-driven.",
+    "queueTitle": "Queue status",
+    "queueDesc": "Colour, icon and text together — never colour alone.",
+    "alertTitle": "Calm by default",
+    "alertDesc": "Minimal motion, generous spacing, large readable type.",
+    "primaryCta": "Explore components",
+    "secondaryCta": "Read the docs"
+  },
+  "theme": {
+    "title": "Theme & accessibility",
+    "subtitle": "Saved on this device and remembered next time.",
+    "mode": {
+      "label": "Appearance",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "high-contrast": "High contrast"
+    },
+    "largeText": "Large text",
+    "compact": "Compact density",
+    "reduceMotion": "Reduce motion"
+  },
+  "queue": {
+    "status": {
+      "scheduled": "Scheduled",
+      "waiting": "Waiting",
+      "called": "Called",
+      "inProgress": "In consultation",
+      "completed": "Completed",
+      "noShow": "No-show",
+      "cancelled": "Cancelled"
+    }
+  }
+}

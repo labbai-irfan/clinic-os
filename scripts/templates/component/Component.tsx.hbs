@@ -1,0 +1,35 @@
+/**
+ * {{pascalCase name}} — shared design-system component.
+ *
+ * Token-only styling (no hex/px), i18n keys for any user-facing string, WCAG 2.2 AA
+ * (focus-visible, aria, reduced-motion). Governed by docs/Naming-Convention.md and
+ * docs/Frontend-Bible.md (design tokens & a11y).
+ */
+
+import { type ReactNode } from 'react';
+
+export interface {{pascalCase name}}Props {
+  /** Visual content of the component. */
+  children?: ReactNode;
+  /** Disables interaction and dims the surface. */
+  isDisabled?: boolean;
+  /** Stable hook for tests (kebab-case, treated like an API). */
+  testId?: string;
+}
+
+/**
+ * {{pascalCase name}} — describe the single responsibility here.
+ */
+export function {{pascalCase name}}({
+  children,
+  isDisabled = false,
+  testId = '{{kebabCase name}}',
+}: {{pascalCase name}}Props) {
+  return (
+    <div data-testid={testId} data-disabled={isDisabled || undefined}>
+      {children}
+    </div>
+  );
+}
+
+{{pascalCase name}}.displayName = '{{pascalCase name}}';
