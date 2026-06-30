@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ClinicOS — CODEOWNERS  (Phase 10 · DevOps Platform · Part 2)
+#
+# Maps every path to its accountable reviewer(s). GitHub auto-requests review
+# from the matching owner on every PR; combined with branch protection
+# ("Require review from Code Owners"), no protected path merges unreviewed.
+#
+# WHY: the enterprise architecture (ADR-0001) organises the codebase by BOUNDED
+# CONTEXT so each module ≈ one team. CODEOWNERS is the machine-readable form of
+# that team topology — it routes a change to the people who own that context.
+#
+# The last matching pattern wins. Order = least → most specific.
+# Teams below are placeholders (org teams `@clinic-os/*`); until they exist the
+# repo owner is the fallback owner. See docs/devops/GitHubArchitecture.md.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Default owner for everything not matched more specifically.
+*                               @labbai-irfan
+
+# ── Foundation & governance (architecture canon — highest scrutiny) ──────────
+/docs/brain/                    @labbai-irfan
+/docs/architecture/             @labbai-irfan
+/docs/engineering/              @labbai-irfan
+/docs/devops/                   @labbai-irfan
+/docs/adr/                      @labbai-irfan
+/.github/                       @labbai-irfan
+/scripts/                       @labbai-irfan
+/eslint.config.js               @labbai-irfan
+/tsconfig*.json                 @labbai-irfan
+/vite.config.ts                 @labbai-irfan
+/package.json                   @labbai-irfan
+
+# ── Design system & theme (shared UI contract — one owning team) ─────────────
+/src/shared/design-system/      @labbai-irfan
+/src/shared/theme/              @labbai-irfan
+/src/shared/styles/             @labbai-irfan
+/docs/design-system/            @labbai-irfan
+/docs/theme-engine/             @labbai-irfan
+
+# ── Cross-cutting shared kernel (ports, api, config — guard the boundaries) ──
+/src/shared/api/                @labbai-irfan
+/src/shared/config/             @labbai-irfan
+/src/app/                       @labbai-irfan
+
+# ── Bounded-context modules (one block per future module = one team) ─────────
+# Uncomment + assign the owning team as each module ships (Phase 6+).
+# /src/modules/patients/        @clinic-os/team-patients
+# /src/modules/appointments/    @clinic-os/team-scheduling
+# /src/modules/queue/           @clinic-os/team-flow
+# /src/modules/consultation/    @clinic-os/team-clinical
+# /src/modules/prescriptions/   @clinic-os/team-clinical
+# /src/modules/pharmacy/        @clinic-os/team-pharmacy
+# /src/modules/billing/         @clinic-os/team-commerce
+# /src/modules/follow-up/       @clinic-os/team-flow
+# /src/modules/records/         @clinic-os/team-records
+# /src/modules/analytics/       @clinic-os/team-insights
+# /src/modules/settings/        @clinic-os/team-platform
+# /src/modules/doctor/          @clinic-os/team-clinical
+# /src/modules/reception/       @clinic-os/team-flow
+# /src/modules/admin/           @clinic-os/team-platform
+
+# ── Localization (every key lands in en/hi/mr/ur — i18n owners review) ───────
+/src/locales/                   @labbai-irfan

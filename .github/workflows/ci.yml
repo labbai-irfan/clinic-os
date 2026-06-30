@@ -71,6 +71,20 @@ jobs:
       - name: Asset hygiene
         run: pnpm run check:assets
 
+      - name: Documentation validation
+        run: pnpm run validate:docs
+
+      - name: Brain validation
+        run: pnpm run validate:brain
+
+      - name: Upload build artifact (deploy source / inspection)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
   e2e:
     name: E2E (Playwright smoke)
     runs-on: ubuntu-latest

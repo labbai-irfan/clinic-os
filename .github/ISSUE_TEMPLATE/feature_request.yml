@@ -1,0 +1,61 @@
+name: ✨ Feature request
+description: Propose a new user-facing capability or enhancement.
+title: 'feat: '
+labels: ['type: feature', 'status: triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Features in ClinicOS are framed by the **65-year-old litmus test** and the
+        **one screen · one task · one CTA** law. Describe the user and their job first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Who is the user and what job are they trying to do? Why is today painful?
+      placeholder: As a <persona> I need to <job> so that <outcome>.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: dropdown
+    id: module
+    attributes:
+      label: Owning module / context
+      options:
+        - patients
+        - appointments
+        - queue
+        - consultation
+        - prescriptions
+        - pharmacy
+        - billing
+        - follow-up
+        - records
+        - analytics
+        - settings
+        - doctor
+        - reception
+        - admin
+        - shared / design-system
+        - cross-module (processes/)
+    validations:
+      required: true
+  - type: checkboxes
+    id: laws
+    attributes:
+      label: Conformance
+      description: A feature is only accepted if it can satisfy these.
+      options:
+        - label: Passes the **65-year-old litmus test** (first try, in their language)
+        - label: Fits **one screen · one primary task · one primary CTA**
+        - label: Localizable (en/hi/mr/ur + RTL) and accessible (WCAG 2.2 AA)
+        - label: Backend-independent (data via services/repositories)
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

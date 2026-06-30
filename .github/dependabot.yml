@@ -1,0 +1,44 @@
+# Automated dependency updates (Phase 10 · Part 8 + Part 9).
+# Dependabot opens grouped, labeled PRs weekly for npm + Actions, so security
+# patches and version drift surface as reviewable PRs that run the full gate —
+# never as silent rot. Grouping keeps the PR count sane; majors stay separate
+# so a breaking bump is never bundled with routine patches.
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 10
+    labels: ['dependencies', 'type: chore']
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
+    groups:
+      react:
+        patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
+      tanstack:
+        patterns: ['@tanstack/*']
+      eslint-prettier:
+        patterns: ['eslint*', 'prettier*', '@typescript-eslint/*', 'typescript-eslint']
+      storybook:
+        patterns: ['storybook', '@storybook/*']
+      testing:
+        patterns:
+          ['vitest', '@vitest/*', '@testing-library/*', '@playwright/*', 'vitest-axe', 'jsdom']
+      minor-and-patch:
+        update-types: ['minor', 'patch']
+    ignore:
+      # Majors land as deliberate, separately-reviewed PRs (often need an ADR).
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    labels: ['dependencies', 'type: ci']
+    commit-message:
+      prefix: 'ci(actions)'

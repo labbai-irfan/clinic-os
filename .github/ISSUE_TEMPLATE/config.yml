@@ -1,0 +1,10 @@
+# ClinicOS issue-template chooser (Phase 10 · Part 2).
+# Forces a template choice; routes free-form questions to discussions.
+blank_issues_enabled: false
+contact_links:
+  - name: 📐 Architecture / process question
+    url: https://github.com/labbai-irfan/clinic-os/blob/main/docs/brain/PROJECT_BRAIN.md
+    about: Read the PROJECT_BRAIN (the permanent project memory) before filing — most answers live there.
+  - name: 🔒 Security vulnerability (private)
+    url: https://github.com/labbai-irfan/clinic-os/security/advisories/new
+    about: Report security issues privately via a GitHub Security Advisory — never in a public issue.

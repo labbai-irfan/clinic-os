@@ -1,0 +1,72 @@
+name: Release
+
+# Release publication (Phase 10 · Part 4 + Part 10). Triggered when a semantic
+# version tag (vX.Y.Z) is pushed — the final step of the phase-completion
+# pipeline. It re-verifies the gate on the tagged commit, builds the production
+# bundle, and publishes a GitHub Release with auto-generated notes + the build
+# artifact attached. Pre-release tags (vX.Y.Z-rc.N / -beta.N / -alpha.N) are
+# marked as pre-releases automatically.
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write # create the GitHub Release
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for release notes
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Quality gate (re-verify the tagged commit)
+        run: pnpm run verify
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Package build artifact
+        run: |
+          mkdir -p release
+          tar -czf "release/clinicos-${GITHUB_REF_NAME}.tar.gz" -C dist .
+
+      - name: Detect pre-release
+        id: prerelease
+        run: |
+          if [[ "${GITHUB_REF_NAME}" =~ -(rc|beta|alpha) ]]; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          prerelease: ${{ steps.prerelease.outputs.value }}
+          name: ClinicOS ${{ github.ref_name }}
+          body_path: ${{ github.workspace }}/.github/release-body.md
+          fail_on_unmatched_files: false
+          files: release/*.tar.gz

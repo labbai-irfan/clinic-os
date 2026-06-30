@@ -99,8 +99,32 @@ The permanent **Quality Assurance System** that governs every future feature: 22
 
 ---
 
+## 🚀 Phase 10 — DevOps & Automation Platform (Foundation v10)
+
+The permanent **delivery platform** governing how every change ships: a trunk-based git strategy, the GitHub collaboration architecture, the full CI/CD pipeline, SemVer versioning, automated releases, a deterministic phase-completion pipeline, documentation automation, deployment, monitoring, and security. Start at the DevOps anchor:
+
+**→ [devops/README.md](./devops/README.md)** — Phase 10 anchor (git → CI/CD → release → deploy → secure)
+
+| Document                                                                 | Purpose                                                    |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| [devops/GitStrategy.md](./devops/GitStrategy.md)                         | Branch/merge/commit/tag/version/rollback strategy + why    |
+| [devops/GitHubArchitecture.md](./devops/GitHubArchitecture.md)           | Repo standards, labels, templates, CODEOWNERS, protection  |
+| [devops/CICDPipeline.md](./devops/CICDPipeline.md)                       | Every GitHub Actions workflow, step by step                |
+| [devops/VersionManagement.md](./devops/VersionManagement.md)             | SemVer, pre-release channels, tags, milestones             |
+| [devops/ReleaseManagement.md](./devops/ReleaseManagement.md)             | Release notes, GitHub Releases, changelog automation       |
+| [devops/PhaseCompletionPipeline.md](./devops/PhaseCompletionPipeline.md) | The deterministic end-of-phase automation                  |
+| [devops/DocumentationAutomation.md](./devops/DocumentationAutomation.md) | What is generated/validated and how docs never rot         |
+| [devops/Deployment.md](./devops/Deployment.md)                           | Environments, promotion, approvals, health/smoke, rollback |
+| [devops/Monitoring.md](./devops/Monitoring.md)                           | Health, performance, bundle, errors, alerts                |
+| [devops/Security.md](./devops/Security.md)                               | Dependency/secret/code scanning, license, protection       |
+| [devops/DeveloperWorkflow.md](./devops/DeveloperWorkflow.md)             | The practical day-to-day: branch → PR → release → rollback |
+| [devops/AutomationAIRules.md](./devops/AutomationAIRules.md)             | The binding DevOps/release contract for AI agents          |
+| [devops/DevOpsRegistry.md](./devops/DevOpsRegistry.md)                   | The single registry of workflows, scripts, configs, envs   |
+
+---
+
 ## 🏛️ Governance
 
 Every architectural decision in this canon states **Why · Benefits · Trade-offs · Alternatives · Future scalability · Enterprise considerations**. Changes to the foundation go through an **ADR** (see [Documentation-Guidelines.md](./Documentation-Guidelines.md) and [adr/](./adr/)). This blueprint governs **every future phase** of ClinicOS development.
 
-_Foundation v1 (Phase 1) + v2 (Phase 2) · 2026-06-27 · Owner: Frontend Architecture_
+_Foundation v1 (Phase 1) → v10 (Phase 10) · 2026-06-30 · Owner: Frontend Architecture / Platform Engineering_

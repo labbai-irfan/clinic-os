@@ -1,9 +1,9 @@
 {
   "name": "clinicos",
-  "version": "0.0.0",
+  "version": "0.10.0",
   "private": true,
   "type": "module",
-  "description": "ClinicOS — the digital nervous system of a clinic. Phase 3 engineering foundation.",
+  "description": "ClinicOS — the digital nervous system of a clinic. Enterprise healthcare SaaS frontend.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=20"
@@ -36,9 +36,13 @@
     "check:tokens": "node scripts/quality/check-tokens.mjs",
     "check:i18n": "node scripts/quality/check-i18n.mjs",
     "check:perf": "node scripts/quality/check-perf-budget.mjs",
+    "validate:docs": "node scripts/quality/validate-docs.mjs",
+    "validate:brain": "node scripts/quality/validate-brain.mjs",
     "quality": "node scripts/quality/quality-gate.mjs",
     "quality:quick": "node scripts/quality/quality-gate.mjs --quick",
-    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test && pnpm run validate:arch && pnpm run check:duplicates && pnpm run check:tokens && pnpm run check:i18n && pnpm run ds:registry && pnpm run check:assets",
+    "release:notes": "node scripts/release/generate-release-notes.mjs",
+    "phase:complete": "node scripts/phase/complete-phase.mjs",
+    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test && pnpm run validate:arch && pnpm run check:duplicates && pnpm run check:tokens && pnpm run check:i18n && pnpm run ds:registry && pnpm run check:assets && pnpm run validate:docs && pnpm run validate:brain",
     "prepare": "husky"
   },
   "dependencies": {

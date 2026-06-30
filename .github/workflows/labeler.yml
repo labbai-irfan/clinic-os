@@ -1,0 +1,40 @@
+name: Labels
+
+# Label automation (Phase 10 · Part 10).
+#  • pr-labeler  — applies `area:` labels to a PR based on the files it touches
+#                  (config: .github/labeler.yml).
+#  • sync-labels — reconciles the repository's labels with the single source of
+#                  truth (.github/labels.yml) whenever it changes, so the
+#                  taxonomy never drifts between contributors.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+    paths: ['.github/labels.yml']
+
+jobs:
+  pr-labeler:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          configuration-path: .github/labeler.yml
+          sync-labels: true
+
+  sync-labels:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crazy-max/ghaction-github-labeler@v5
+        with:
+          yaml-file: .github/labels.yml
+          skip-delete: true # never delete labels already in use

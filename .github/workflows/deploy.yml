@@ -1,0 +1,118 @@
+name: Deploy
+
+# Deployment pipeline (Phase 10 · Part 7) — PROVIDER-AGNOSTIC TEMPLATE.
+#
+# ClinicOS is a static SPA, so "deploy" = publish the built `dist/` to a host
+# (Vercel / Netlify / Cloudflare Pages / S3+CloudFront / GitHub Pages). The host
+# is intentionally NOT hardcoded: wire it by setting the `DEPLOY_PROVIDER` repo
+# VARIABLE and the provider's secrets. Until then every job no-ops safely (the
+# `if:` guard), so this workflow is inert — never red — on a fresh repo.
+#
+# Environments (configure protection rules in Settings → Environments):
+#   • preview     — every PR / branch push        (ephemeral URL, auto)
+#   • staging     — main after merge              (auto)
+#   • production  — on a published Release         (REQUIRES manual approval)
+#
+# Each deploy is followed by a health check + Playwright smoke against the live
+# URL, and a documented rollback path (re-deploy the previous tag).
+# Full runbook: docs/devops/Deployment.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [preview, staging, production]
+        default: staging
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  build:
+    name: Build deployable bundle
+    if: ${{ vars.DEPLOY_PROVIDER != '' }}
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (env-specific)
+        run: pnpm run build
+        env:
+          VITE_ASSET_BASE_URL: ${{ vars.VITE_ASSET_BASE_URL }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deploy-dist
+          path: dist/
+          retention-days: 7
+
+  deploy:
+    name: Deploy → ${{ github.event_name == 'release' && 'production' || (inputs.environment || 'staging') }}
+    needs: build
+    if: ${{ vars.DEPLOY_PROVIDER != '' }}
+    runs-on: ubuntu-latest
+    # GitHub environment protection enforces manual approval for production.
+    environment:
+      name: ${{ github.event_name == 'release' && 'production' || (inputs.environment || 'staging') }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: deploy-dist
+          path: dist
+      - name: Publish to host
+        run: |
+          echo "Deploying dist/ to provider: ${{ vars.DEPLOY_PROVIDER }}"
+          echo "Wire your provider's deploy action/CLI here (see docs/devops/Deployment.md)."
+          # Example (Cloudflare Pages):
+          #   npx wrangler pages deploy dist --project-name clinicos
+      - name: Health check
+        run: |
+          URL="${{ vars.DEPLOY_URL }}"
+          if [ -z "$URL" ]; then echo "No DEPLOY_URL set — skipping health check."; exit 0; fi
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$URL" || echo 000)
+            echo "attempt $i → HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 6
+          done
+          echo "Health check failed for $URL"; exit 1
+
+  smoke:
+    name: Post-deploy smoke (Playwright)
+    needs: deploy
+    if: ${{ vars.DEPLOY_PROVIDER != '' && vars.DEPLOY_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Smoke test against live URL
+        run: pnpm run e2e
+        env:
+          E2E_BASE_URL: ${{ vars.DEPLOY_URL }}

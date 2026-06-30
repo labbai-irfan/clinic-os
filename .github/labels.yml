@@ -1,0 +1,101 @@
+# ClinicOS label taxonomy (Phase 10 · Part 2 + Part 10).
+# The single source of truth for repository labels. Synced to GitHub by the
+# `labeler` workflow (crazy-max/ghaction-github-labeler) so labels never drift
+# between contributors. Colors are grouped by family for fast visual scanning.
+
+# ── type:  what kind of change (drives release-notes sections) ───────────────
+- name: 'type: feature'
+  color: '0E8A16'
+  description: New user-facing capability.
+- name: 'type: bug'
+  color: 'D73A4A'
+  description: Something is broken.
+- name: 'type: chore'
+  color: 'C5DEF5'
+  description: Tooling, deps, refactor, no user-facing change.
+- name: 'type: docs'
+  color: '0075CA'
+  description: Documentation or Brain only.
+- name: 'type: ci'
+  color: 'BFD4F2'
+  description: CI/CD, pipeline, automation.
+- name: 'type: security'
+  color: 'B60205'
+  description: Security fix or hardening.
+
+# ── area:  which part of the system (auto-applied by path via labeler.yml) ───
+- name: 'area: design-system'
+  color: '5319E7'
+  description: shared/design-system components.
+- name: 'area: theme'
+  color: '6F42C1'
+  description: Theme engine / tokens.
+- name: 'area: i18n'
+  color: '1D76DB'
+  description: Localization / RTL.
+- name: 'area: modules'
+  color: '0052CC'
+  description: A bounded-context module.
+- name: 'area: app-shell'
+  color: '2188FF'
+  description: app/ composition root, routing, providers.
+- name: 'area: tooling'
+  color: 'D4C5F9'
+  description: scripts/, config, build.
+- name: 'area: ci-cd'
+  color: 'BFDADC'
+  description: .github/ workflows & automation.
+- name: 'area: docs'
+  color: 'C2E0C6'
+  description: docs/ canon.
+
+# ── status:  lifecycle ───────────────────────────────────────────────────────
+- name: 'status: triage'
+  color: 'FBCA04'
+  description: Needs assessment.
+- name: 'status: blocked'
+  color: 'B60205'
+  description: Blocked by a dependency or decision.
+- name: 'status: in-progress'
+  color: 'FEF2C0'
+  description: Actively being worked.
+- name: 'status: needs-review'
+  color: 'FBCA04'
+  description: Awaiting code review.
+
+# ── priority ─────────────────────────────────────────────────────────────────
+- name: 'priority: critical'
+  color: 'B60205'
+  description: Drop everything (S1 — clinic workflow blocked / data loss).
+- name: 'priority: high'
+  color: 'D93F0B'
+  description: Next up.
+- name: 'priority: low'
+  color: '0E8A16'
+  description: Nice to have.
+
+# ── quality / governance flags ───────────────────────────────────────────────
+- name: 'a11y'
+  color: '7057FF'
+  description: Accessibility (WCAG 2.2 AA) impact.
+- name: 'breaking-change'
+  color: 'B60205'
+  description: Backwards-incompatible; needs a major bump + migration note.
+- name: 'needs-adr'
+  color: 'D876E3'
+  description: Structural change requiring an ADR + Brain update.
+- name: 'needs-brain-update'
+  color: 'D876E3'
+  description: Requires a PROJECT_BRAIN / registry update before merge.
+- name: 'dependencies'
+  color: '0366D6'
+  description: Dependency bump (Dependabot).
+- name: 'good first issue'
+  color: '7057FF'
+  description: Friendly entry point for new contributors.
+- name: 'size: XS'
+  color: 'EDEDED'
+  description: Trivial diff.
+- name: 'size: L'
+  color: 'EDEDED'
+  description: Large diff — consider splitting.

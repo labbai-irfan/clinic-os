@@ -1,0 +1,42 @@
+# Path-based auto-labeling (Phase 10 · Part 10).
+# Consumed by actions/labeler (.github/workflows/labeler.yml): when a PR touches
+# these paths, the matching `area:` label is applied automatically — no manual
+# triage. Uses the v5 `changed-files`/`any-glob-to-any-file` syntax.
+
+'area: design-system':
+  - changed-files:
+      - any-glob-to-any-file: ['src/shared/design-system/**', 'docs/design-system/**']
+
+'area: theme':
+  - changed-files:
+      - any-glob-to-any-file:
+          ['src/shared/theme/**', 'src/shared/styles/**', 'docs/theme-engine/**']
+
+'area: i18n':
+  - changed-files:
+      - any-glob-to-any-file: ['src/locales/**', 'src/shared/localization/**']
+
+'area: modules':
+  - changed-files:
+      - any-glob-to-any-file: ['src/modules/**', 'src/processes/**', 'src/entities/**']
+
+'area: app-shell':
+  - changed-files:
+      - any-glob-to-any-file: ['src/app/**', 'src/routes/**']
+
+'area: tooling':
+  - changed-files:
+      - any-glob-to-any-file:
+          ['scripts/**', '*.config.*', 'tsconfig*.json', 'package.json', '.husky/**']
+
+'area: ci-cd':
+  - changed-files:
+      - any-glob-to-any-file: ['.github/**']
+
+'area: docs':
+  - changed-files:
+      - any-glob-to-any-file: ['docs/**', '**/*.md']
+
+'dependencies':
+  - changed-files:
+      - any-glob-to-any-file: ['package.json', 'pnpm-lock.yaml']

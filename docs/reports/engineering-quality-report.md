@@ -2,23 +2,23 @@
 
 # ClinicOS — Engineering Quality Report
 
-> Generated: 2026-06-30T12:06:30.076Z · Gates: 12 · Passed: 12 · Failed: 0 · Skipped: 0
+> Generated: 2026-06-30T17:28:11.988Z · Gates: 12 · Passed: 12 · Failed: 0 · Skipped: 0
 
 **Overall: ✅ GREEN — all blocking gates passed.**
 
 | Gate | Scope | Result | Time |
 | --- | --- | --- | --- |
-| TypeScript (strict) | Types | ✅ pass | 7.3s |
-| ESLint (rules + boundaries + cycles) | Lint | ✅ pass | 25.4s |
-| Prettier | Format | ✅ pass | 13.7s |
-| Architecture validation | Part 4 | ✅ pass | 0.2s |
+| TypeScript (strict) | Types | ✅ pass | 1.7s |
+| ESLint (rules + boundaries + cycles) | Lint | ✅ pass | 8.5s |
+| Prettier | Format | ✅ pass | 6.0s |
+| Architecture validation | Part 4 | ✅ pass | 0.1s |
 | Duplication gate | Part 2 | ✅ pass | 0.1s |
-| Design-token compliance | Part 3 | ✅ pass | 0.2s |
-| Localization validation | Part 7 | ✅ pass | 0.2s |
+| Design-token compliance | Part 3 | ✅ pass | 0.1s |
+| Localization validation | Part 7 | ✅ pass | 0.1s |
 | Component registry | Registry | ✅ pass | 0.1s |
 | Asset hygiene | Assets | ✅ pass | 0.1s |
-| Unit + a11y tests (Vitest) | Test | ✅ pass | 20.4s |
-| Production build | Build | ✅ pass | 11.7s |
-| Performance budget | Part 5 | ✅ pass | 0.2s |
+| Unit + a11y tests (Vitest) | Test | ✅ pass | 4.7s |
+| Production build | Build | ✅ pass | 4.1s |
+| Performance budget | Part 5 | ✅ pass | 0.1s |
 
 _Run `pnpm quality` to regenerate. Gate definitions: [docs/engineering/QualityGates.md](../engineering/QualityGates.md)._

@@ -1,0 +1,70 @@
+name: 🐞 Bug report
+description: Something is broken or behaves incorrectly.
+title: 'fix: '
+labels: ['type: bug', 'status: triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. A good bug report is reproducible and specific.
+        For accessibility or localization defects, please also tick the matching box below.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+      placeholder: When I … I expected … but got …
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of ClinicOS?
+      options:
+        - design-system (shared UI)
+        - theme / tokens
+        - localization (i18n / RTL)
+        - app shell / routing
+        - module (patients/appointments/queue/…)
+        - tooling / CI / build
+        - docs / Brain
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - 'S1 — blocks a clinic workflow / data loss'
+        - 'S2 — major, no safe workaround'
+        - 'S3 — minor / cosmetic'
+    validations:
+      required: true
+  - type: checkboxes
+    id: quality-flags
+    attributes:
+      label: Quality impact
+      options:
+        - label: This is an **accessibility** defect (keyboard/SR/contrast — WCAG 2.2 AA)
+        - label: This is a **localization** defect (missing/incorrect string, RTL, plural)
+        - label: This involves **patient data** correctness or safety
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: e.g. Chrome 124 / Windows 11 / build v0.10.0 / language=ur
+  - type: textarea
+    id: context
+    attributes:
+      label: Logs / screenshots / context

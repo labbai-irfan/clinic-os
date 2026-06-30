@@ -1,0 +1,35 @@
+name: 🧰 Chore / tech-debt / tooling
+description: Maintenance, refactor, dependency, CI, or documented tech-debt work.
+title: 'chore: '
+labels: ['type: chore', 'status: triage']
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: What needs doing, and why now?
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - refactor (no behaviour change)
+        - dependency update
+        - CI / build / tooling
+        - documentation / Brain
+        - tech-debt (DEBT-NNNN)
+        - performance / bundle
+    validations:
+      required: true
+  - type: input
+    id: debt
+    attributes:
+      label: Linked DEBT id (if any)
+      placeholder: DEBT-0003
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: How do we know this is complete? (Gates, docs, registry rows.)

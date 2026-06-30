@@ -1,0 +1,30 @@
+name: Release drafter
+
+# Continuous release notes (Phase 10 · Part 4 + Part 10). As PRs merge to main,
+# this keeps a DRAFT GitHub Release up to date — grouping changes by label and
+# computing the next semantic version from PR labels (config:
+# .github/release-drafter.yml). On PRs it also autolabels by branch/title so the
+# notes are well-grouped. Publishing happens via release.yml when a tag is cut.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  update_draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # manage the draft release
+      pull-requests: write # autolabel PRs
+    steps:
+      - uses: release-drafter/release-drafter@v6
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

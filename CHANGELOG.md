@@ -8,6 +8,40 @@ exhaustive per-phase record lives in
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-06-30 — DevOps & Automation Platform
+
+### Added — DevOps & Automation Platform (Phase 10)
+
+- **Git strategy & GitHub architecture** — `.github/`: `CODEOWNERS` (bounded-context
+  team topology), `pull_request_template.md` (8-Laws + gates + rollback), three issue
+  forms + a chooser (`ISSUE_TEMPLATE/`), a synced label taxonomy (`labels.yml` +
+  `labeler.yml`), and a declared `BRANCH_PROTECTION.md` (trunk-based, squash + linear,
+  Code-Owner review, required checks).
+- **CI/CD** — extended `ci.yml` (now also `validate:docs` + `validate:brain` + a build
+  artifact) and **six** new workflows: `codeql.yml` (SAST), `dependency-review.yml`,
+  `release-drafter.yml`, `labeler.yml`, `release.yml` (tag → published GitHub Release),
+  and a provider-agnostic, approval-gated `deploy.yml` (preview/staging/production +
+  health + smoke).
+- **Versioning & releases** — SemVer derived from Conventional Commits / PR labels;
+  `package.json` adopts manifest-tracked versioning (`0.0.0` → `0.10.0`);
+  `release-drafter.yml` + `scripts/release/generate-release-notes.mjs` (`pnpm release:notes`)
+  produce grouped notes and infer the next version.
+- **Phase-completion pipeline** — `scripts/phase/complete-phase.mjs` (`pnpm phase:complete`):
+  one deterministic command that runs the gate, validates the Brain/docs/report,
+  generates release notes, and (with `--execute`) commits · tags · pushes.
+- **Documentation/Brain validators** — `scripts/quality/validate-docs.mjs` +
+  `validate-brain.mjs` (`pnpm validate:docs` / `validate:brain`), wired into `verify`
+  and CI: required-doc presence, scoped link integrity, ADR-marker sync, footer/version.
+- **Security & dependency mgmt** — `dependabot.yml` (weekly grouped PRs), CodeQL,
+  dependency review with a copyleft-license denylist, least-privilege workflow
+  permissions, protected `main` + tags.
+- **Canon** — `docs/devops/` (14 docs): README, GitStrategy, GitHubArchitecture,
+  CICDPipeline, VersionManagement, ReleaseManagement, PhaseCompletionPipeline,
+  DocumentationAutomation, Deployment, Monitoring, Security, DeveloperWorkflow,
+  AutomationAIRules, DevOpsRegistry. ADR-0014.
+
+## [0.9.0] — 2026-06-30 — Engineering Quality Platform
+
 ### Added — Engineering Quality Platform (Phase 9)
 
 - **Quality gates** — five dependency-free Node validators under `scripts/quality/`:

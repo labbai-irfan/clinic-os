@@ -1,0 +1,41 @@
+# Release-notes automation (Phase 10 · Part 4 + Part 10).
+# release-drafter/release-drafter keeps a DRAFT GitHub Release continuously
+# up to date as PRs merge to main: it groups merged PRs by label, computes the
+# next semantic version from the labels, and writes human-readable notes.
+# The release.yml workflow publishes the matching tag.
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🚀 Features'
+    labels: ['type: feature']
+  - title: '🐞 Fixes'
+    labels: ['type: bug']
+  - title: '⚡ Performance & a11y'
+    labels: ['a11y', 'priority: critical']
+  - title: '🔒 Security'
+    labels: ['type: security']
+  - title: '🧰 Maintenance'
+    labels: ['type: chore', 'type: ci', 'dependencies']
+  - title: '📚 Documentation'
+    labels: ['type: docs']
+exclude-labels:
+  - 'skip-changelog'
+# Semantic-version resolution from PR labels (drives Part 4 version bumps).
+version-resolver:
+  major:
+    labels: ['breaking-change']
+  minor:
+    labels: ['type: feature']
+  patch:
+    labels: ['type: bug', 'type: chore', 'type: docs', 'type: ci', 'type: security']
+  default: patch
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+no-changes-template: '- No user-facing changes.'
+template: |
+  ## ClinicOS $RESOLVED_VERSION
+
+  $CHANGES
+
+  ---
+  **Full changelog:** https://github.com/labbai-irfan/clinic-os/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  Authoritative per-phase record: `docs/brain/PROJECT_BRAIN.md`.
