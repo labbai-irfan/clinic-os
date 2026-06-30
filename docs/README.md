@@ -76,6 +76,29 @@ Phase 2 scales the foundation to **thousands of clinics, hundreds of developers,
 
 ---
 
+## 🛡️ Phase 9 — Engineering Quality Platform (Foundation v9)
+
+The permanent **Quality Assurance System** that governs every future feature: 22 engineering standards, a 12-gate automated PR pipeline (`pnpm quality`), enterprise lint rules, architecture/performance/accessibility/localization validators, the Definition of Done, per-artifact review checklists, and the AI quality contract. Start at the engineering anchor:
+
+**→ [engineering/README.md](./engineering/README.md)** — Phase 9 anchor (standards → gates → checklists)
+
+| Document                                                                           | Purpose                                                  |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [engineering/EngineeringStandards.md](./engineering/EngineeringStandards.md)       | The standard for every artifact (architecture → git)     |
+| [engineering/QualityGates.md](./engineering/QualityGates.md)                       | The 12 automated PR gates                                |
+| [engineering/LintRules.md](./engineering/LintRules.md)                             | Every enterprise lint rule, explained                    |
+| [engineering/ArchitectureValidation.md](./engineering/ArchitectureValidation.md)   | Folder/naming/layer/barrel/isolation validation          |
+| [engineering/PerformanceBudgets.md](./engineering/PerformanceBudgets.md)           | JS/CSS/font/image/page budgets + Web Vitals              |
+| [engineering/AccessibilityValidation.md](./engineering/AccessibilityValidation.md) | WCAG 2.2 AA validation (keyboard → RTL)                  |
+| [engineering/LocalizationValidation.md](./engineering/LocalizationValidation.md)   | Missing/unused keys, RTL, ICU, Intl, terminology         |
+| [engineering/DocumentationStandards.md](./engineering/DocumentationStandards.md)   | What every feature must document                         |
+| [engineering/DefinitionOfDone.md](./engineering/DefinitionOfDone.md)               | The complete, gated Definition of Done                   |
+| [engineering/ReviewChecklists.md](./engineering/ReviewChecklists.md)               | Per-artifact reviewer checklists                         |
+| [engineering/AIQualityRules.md](./engineering/AIQualityRules.md)                   | The binding quality contract for AI agents               |
+| [engineering/QualityRegistry.md](./engineering/QualityRegistry.md)                 | The living registry of standards, gates, budgets, owners |
+
+---
+
 ## 🏛️ Governance
 
 Every architectural decision in this canon states **Why · Benefits · Trade-offs · Alternatives · Future scalability · Enterprise considerations**. Changes to the foundation go through an **ADR** (see [Documentation-Guidelines.md](./Documentation-Guidelines.md) and [adr/](./adr/)). This blueprint governs **every future phase** of ClinicOS development.

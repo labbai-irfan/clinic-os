@@ -17,6 +17,7 @@ import {
   type HTMLAttributes,
   type InputHTMLAttributes,
   useContext,
+  useMemo,
 } from 'react';
 
 import { cn } from '@shared/lib/cn';
@@ -45,8 +46,14 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function R
   { name, value, defaultValue, onValueChange, className, children, ...props },
   ref,
 ) {
+  // Memoize so the context value is stable across renders (perf — avoids
+  // re-rendering every Radio consumer on each parent render).
+  const ctx = useMemo<RadioGroupContextValue>(
+    () => ({ name, value, defaultValue, onValueChange }),
+    [name, value, defaultValue, onValueChange],
+  );
   return (
-    <RadioGroupContext.Provider value={{ name, value, defaultValue, onValueChange }}>
+    <RadioGroupContext.Provider value={ctx}>
       <div ref={ref} role="radiogroup" className={cn('flex flex-col gap-3', className)} {...props}>
         {children}
       </div>

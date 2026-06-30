@@ -31,7 +31,14 @@
     "optimize:svg": "svgo -f src/assets -r --config svgo.config.js",
     "check:assets": "node scripts/check-assets.mjs",
     "ds:registry": "node scripts/ds-registry.mjs",
-    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test",
+    "validate:arch": "node scripts/quality/validate-architecture.mjs",
+    "check:duplicates": "node scripts/quality/check-duplicates.mjs",
+    "check:tokens": "node scripts/quality/check-tokens.mjs",
+    "check:i18n": "node scripts/quality/check-i18n.mjs",
+    "check:perf": "node scripts/quality/check-perf-budget.mjs",
+    "quality": "node scripts/quality/quality-gate.mjs",
+    "quality:quick": "node scripts/quality/quality-gate.mjs --quick",
+    "verify": "pnpm run typecheck && pnpm run lint && pnpm run format:check && pnpm run test && pnpm run validate:arch && pnpm run check:duplicates && pnpm run check:tokens && pnpm run check:i18n && pnpm run ds:registry && pnpm run check:assets",
     "prepare": "husky"
   },
   "dependencies": {

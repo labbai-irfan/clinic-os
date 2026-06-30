@@ -44,11 +44,26 @@ jobs:
       - name: Format check
         run: pnpm run format:check
 
+      - name: Architecture validation
+        run: pnpm run validate:arch
+
+      - name: Duplication gate
+        run: pnpm run check:duplicates
+
+      - name: Design-token compliance
+        run: pnpm run check:tokens
+
+      - name: Localization validation
+        run: pnpm run check:i18n
+
       - name: Unit + a11y tests
         run: pnpm run test
 
       - name: Build
         run: pnpm run build
+
+      - name: Performance budget
+        run: pnpm run check:perf
 
       - name: Component registry validation
         run: pnpm run ds:registry

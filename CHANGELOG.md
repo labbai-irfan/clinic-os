@@ -8,6 +8,27 @@ exhaustive per-phase record lives in
 
 ## [Unreleased]
 
+### Added — Engineering Quality Platform (Phase 9)
+
+- **Quality gates** — five dependency-free Node validators under `scripts/quality/`:
+  `validate-architecture.mjs` (layers · barrels · naming · dependency direction · feature isolation),
+  `check-duplicates.mjs` (duplicate components/hooks/services/utilities),
+  `check-tokens.mjs` (no hardcoded hex / unsanctioned inline styles),
+  `check-i18n.mjs` (en→hi/mr/ur key parity, empty/stale/unused keys),
+  `check-perf-budget.mjs` (gzipped JS/CSS + raw fonts/images vs `scripts/quality/budgets.json`).
+- **Orchestrator** — `quality-gate.mjs` runs all 12 gates and regenerates
+  `docs/reports/engineering-quality-report.md`. New scripts: `pnpm quality`, `quality:quick`,
+  `validate:arch`, `check:duplicates`, `check:tokens`, `check:i18n`, `check:perf`; extended `verify`.
+- **Enterprise lint rules** — `eslint.config.js`: `no-explicit-any`, no-hardcoded-hex (`no-restricted-syntax`,
+  theme-engine exempt), `jsx-no-constructed-context-values`, `no-useless-fragment`, `self-closing-comp`,
+  `no-console` (logger exempt), `no-debugger`/`no-var`/`prefer-const`. Fixed an inline context-value
+  perf bug in `Radio.tsx` (now `useMemo`).
+- **Engineering canon** — `docs/engineering/` (13 docs): README, EngineeringStandards, QualityGates,
+  LintRules, ArchitectureValidation, PerformanceBudgets, AccessibilityValidation, LocalizationValidation,
+  DocumentationStandards, DefinitionOfDone, ReviewChecklists, AIQualityRules, QualityRegistry.
+- **CI** — `.github/workflows/ci.yml` extended with the architecture, duplication, token, i18n, and
+  performance-budget gates.
+
 ### Added — Production readiness
 
 - **CI/CD** — `.github/workflows/ci.yml`: runs the full gate (typecheck · lint · format · test · build · `ds:registry` · `check:assets`) on every push to `main` and every PR, plus a Playwright E2E job.

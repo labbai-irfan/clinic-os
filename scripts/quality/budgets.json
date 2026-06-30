@@ -1,0 +1,21 @@
+{
+  "$comment": "ClinicOS performance budgets (Phase 9 · Part 5). Text assets (JS/CSS/HTML) are measured GZIPPED — that is what ships over the wire. Binary assets (fonts/images) are already compressed, so they are measured RAW. Source maps (*.map) are excluded. Rationale for each number: docs/engineering/PerformanceBudgets.md. Tighten over time; never loosen without an ADR.",
+  "unit": "kilobytes",
+  "js": {
+    "totalGzipKB": 300,
+    "maxChunkGzipKB": 170
+  },
+  "css": {
+    "totalGzipKB": 24
+  },
+  "fonts": {
+    "totalRawKB": 360,
+    "maxFileRawKB": 110
+  },
+  "images": {
+    "maxFileRawKB": 250
+  },
+  "page": {
+    "transferWeightKB": 640
+  }
+}

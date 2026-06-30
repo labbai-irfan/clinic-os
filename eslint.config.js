@@ -344,6 +344,64 @@ export default tseslint.config(
   },
 
   // ---------------------------------------------------------------------------
+  // 7b) Enterprise quality rules (Phase 9). High-value correctness/perf rules
+  //     enforced across src/. The "no hardcoded color / inline style / string"
+  //     laws are ALSO enforced structurally by scripts/quality/check-tokens.mjs
+  //     and eslint i18next (§7); these rules add the AST-level guards.
+  //     Authoritative catalog + rationale: docs/engineering/LintRules.md.
+  // ---------------------------------------------------------------------------
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/**/*.test.{ts,tsx}',
+      'src/**/*.spec.{ts,tsx}',
+      'src/**/*.stories.{ts,tsx}',
+      'src/testing/**',
+      'src/mock/**',
+    ],
+    rules: {
+      // No `any` — strict typing is non-negotiable in a healthcare system.
+      '@typescript-eslint/no-explicit-any': 'error',
+      // New context value object every render defeats memoization (perf footgun).
+      'react/jsx-no-constructed-context-values': 'error',
+      // Useless fragments are noise and a sign of copy-paste.
+      'react/jsx-no-useless-fragment': 'error',
+      // Self-closing empty elements — consistency + smaller diffs.
+      'react/self-closing-comp': 'error',
+      // `console.*` is forbidden — use the shared logger port (PHI-safe redaction).
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+      // Dead code / footguns.
+      'no-debugger': 'error',
+      'no-var': 'error',
+      'prefer-const': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          // Inline hex colors in code are a Token-Rule violation (Law 5).
+          selector: 'Literal[value=/#[0-9a-fA-F]{6}\\b/]',
+          message:
+            'Hardcoded hex color is forbidden (Law 5). Use a semantic/component token. ' +
+            'Color math lives only in shared/theme.',
+        },
+      ],
+    },
+  },
+
+  // The theme engine legitimately handles raw hex (ramp generation, contrast
+  // math, the JS token mirror) — exempt it from the no-hex syntax rule.
+  {
+    files: ['src/shared/theme/**/*.{ts,tsx}'],
+    rules: { 'no-restricted-syntax': 'off' },
+  },
+
+  // The logger port + its console adapter are the ONE sanctioned place that may
+  // touch `console.*` — everything else must route through the logger.
+  {
+    files: ['src/shared/logger/**/*.{ts,tsx}'],
+    rules: { 'no-console': 'off' },
+  },
+
+  // ---------------------------------------------------------------------------
   // 8) Relaxations for tests, mocks, testing utils & locale/config code.
   // ---------------------------------------------------------------------------
   {
